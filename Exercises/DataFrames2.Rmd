@@ -1,0 +1,99 @@
+---
+title: "data.frames II"
+subtitle: "Exercise"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{data.frames II Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_setup.R")
+opts_chunk$set(echo=showkey, results=ifelse(showkey,"markup","hide"))
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.  For the filtering/subsetting questions, make sure to provide some evidence to support that your filter/subset was successful.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+dWE <- read.csv("WalleyeErie2.csv")
+str(dWE)
+```
+    a. For this application, remove the `setID` and `grid` variables.
+```{r}
+dWE <- select(dWE,-setID,-grid)
+headtail(dWE)
+```
+    b. Add variables that convert the `tl` measurements from mm to inches and the `w` values from grams to pounds.
+```{r}
+dWE <- mutate(dWE,tl.in=tl/25.4,w.lbs=w/454)
+headtail(dWE)
+```
+    c. Add a new variable that records the sex of the fish as `M` for "male" and `F` for female?
+```{r}
+dWE <- mutate(dWE,sex2=mapvalues(sex,from=c("male","female"),to=c("M","F")))
+headtail(dWE)
+```
+    d. Add a new variable that contains the capture year as a factor-type variable.  How many levels of this variable are present in the data.frame?
+```{r}
+dWE <- mutate(dWE,fyear=factor(year))
+headtail(dWE)
+levels(dWE$fyear)
+```
+    e. Create a new data.frame that contains only male fish.  [*Show two ways to create this data.frame.*]
+```{r}
+tmp <- filterD(dWE,sex=="male")
+levels(tmp$sex)
+```
+    f. Create a new data.frame that contains all fish captured in 2005, 2009, and 2013.
+```{r}
+tmp <- filterD(dWE,year %in% c(2005,2009,2013))
+levels(tmp$fyear)
+```
+    g. Create a new data.frame that contains only females captured in 2010.
+```{r}
+tmp <- filterD(dWE,sex=="female",year==2010)
+headtail(tmp)
+```
+    h. Create a new data.frame that contains only female fish larger than 750 mm.
+```{r}
+( tmp <- filterD(dWE,sex=="female",tl>750) )
+```
+    i. Create a new data.frame that contains only males captured in 2013 for which a weight was NOT recorded.
+```{r}
+( tmp <- filterD(dWE,sex=="male",year==2013,is.na(w)) )
+```
+    j. Create a new data.frame that contains only males for which an age was NOT recorded.
+```{r warning=showkey}
+( tmp <- filterD(dWE,sex=="male",is.na(age)) )
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+2. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+library(dplyr)
+meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE)
+dNU <- read_excel("PG027.SA.Data.xlsx",na="nd",skip=1,
+                  col_names=meta$new_names,col_types=meta$new_types)
+dNU <- mutate(dNU,netset.time=format(netset.time,"%T"),netlift.time=format(netlift.time,"%T"),
+              fyear=factor(year),loc=factor(loc),locAKA=factor(locAKA),water.type=factor(water.type),
+              spec=factor(spec),sex=factor(sex),mat=factor(mat),life.hist=factor(life.hist))
+dNU <- as.data.frame(dNU)
+```
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("DataFrames2.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

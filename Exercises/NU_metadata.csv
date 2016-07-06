@@ -1,0 +1,73 @@
+"old_names","new_names","new_types"
+"Index","index","blank"
+"Location - Name","loc","text"
+"AKA","locAKA","text"
+"Location - WB Code","locWB","text"
+"Study Year","year","numeric"
+"Freshwater/ Seawater","water.type","text"
+"Data Collected by:","collector","text"
+"Station #","station","text"
+"Lift","lift","numeric"
+"Net Type","net.type","text"
+"Mesh Size (mm)","mesh.mm","numeric"
+"Mesh Size
+
+(inch)","mesh.in","numeric"
+"Species","spec","text"
+"Sample #","sample","numeric"
+"Fork Length (mm - fresh)","FL","numeric"
+"Fork Length (mm - thawed)","FL.thawed","numeric"
+"Round Weight (g - fresh)","wt","numeric"
+"Round Weight (g - thawed)","wt.thawed","numeric"
+"Dressed Weight (g)","wt.dressed","numeric"
+"Sex (Male/ Female)","sex","text"
+"Maturity","mat","text"
+"Gonad Weight (g)","gonad.wt","numeric"
+"Gonads Preserved
+
+(yes or no)","gonad.prsrvd","text"
+"Otoliths (0/1/2)","oto.num","numeric"
+"FIN CLIP (base for age)","finclip","text"
+"DNA Tissue (fin tip)","dnatissue","text"
+"Stomach Contents","stomach.contents","text"
+"Stomach Preserved
+
+(yes or no)","stomach.prsrved","text"
+"Muscle Tissue Frozen
+
+(yes or no)","muscle.frozen","text"
+"Gill Arch Frozen
+
+(yes or no)","gillarch.frozen","text"
+"Life History Type Suspected
+
+(Anadromous, Resident, Unknown)","life.hist","text"
+"Use 
+
+(Frozen / P / Released)","use","text"
+"Age (Otolith)","age","numeric"
+"Fecundity","fecundity","numeric"
+"Average Egg Diameter (mm)","egg.diam","numeric"
+"Latitude
+
+(dd.dddd)","lat","numeric"
+"Longitude
+
+(dd.dddd)","long","numeric"
+"Water Depth A (m)","depthA","numeric"
+"Water Depth B (m)","depthB","numeric"
+"Water Depth (m)","depth","numeric"
+"Net Length (m)","net.len","numeric"
+"Net Height (m)","net.height","numeric"
+"Wind Direction","wind.dir","text"
+"Wind Speed","wind.spd","text"
+"Water Temp (oC)","temp.water","numeric"
+"AIR Temp (oC)","temp.air","numeric"
+"Sky","sky","text"
+"Net Set Time","netset.time","date"
+"Net Set Date","netset.date","date"
+"Net Lift Time","netlift.time","date"
+"Net Lift Date","netlift.date","date"
+"Lake Zone","lake.zone","text"
+"Tag #","tag","text"
+"Remarks","remarks","text"

@@ -1,0 +1,69 @@
+---
+title: "data.frames I"
+subtitle: "Exercise"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{data.frames I Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_setup.R")
+opts_chunk$set(echo=showkey, results=ifelse(showkey,"markup","hide"))
+library(FSA)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+str(dWE)
+```
+    a. How many variables are recorded in this data.frame?
+```{r}
+ncol(dWE)
+```
+    b. How many individuals are recorded in this data.frame?
+```{r}
+nrow(dWE)
+```
+    c. What is the name and data type for the fifth variable?
+```{r}
+names(dWE)[5]
+class(dWE[,5])
+```
+    d. What is the name and data type for the second variable?  Does the data type make sense?
+```{r}
+names(dWE)[2]
+class(dWE[,2])
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+2. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+library(dplyr)
+( meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE) )
+dNU <- read_excel("PG027.SA.Data.xlsx",na="nd",skip=1,
+                  col_names=meta$new_names,col_types=meta$new_types)
+dNU <- mutate(dNU,netset.time=format(netset.time,"%T"),netlift.time=format(netlift.time,"%T"),
+              fyear=factor(year),loc=factor(loc),locAKA=factor(locAKA),water.type=factor(water.type),
+              spec=factor(spec),sex=factor(sex),mat=factor(mat),life.hist=factor(life.hist))
+dNU <- as.data.frame(dNU)
+str(dNU)
+```
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("DataFrames1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

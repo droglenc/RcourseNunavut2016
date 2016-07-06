@@ -1,0 +1,94 @@
+---
+title: "Very Quick R Basics"
+subtitle: "Exercise"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{R Basics Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+showkey <- FALSE
+source("../knitr_setup.R")
+opts_chunk$set(echo=showkey, results=ifelse(showkey,"markup","hide"))
+```
+
+----
+
+Answer the following questions with R code by creating (*and editing if you make a mistake*) an R script and iteratively running the code in RStudio.
+
+1. Load the `FSA` library (*even though it is not required for this exercise*).
+```{r message=FALSE}
+library(FSA)
+```
+
+2. Use an expression to compute the CPE (number of fish per net) if 87 fish were captured in three nets.
+```{r}
+87/3
+```
+
+3. Assign (and view) the result of an expression that calculates the CPE (number of fish per 1000 m of gillnet per night) if 87 fish were captured in 1400 m of gillnet fished for two nights.
+```{r}
+( res <- 87/1400/2*1000 )
+```
+
+4. Create an expression that uses the object from the previous question to modify the CPE to be per 300 m of gillnet per night (i.e., don't re-create the previous expression, simply modify it by starting with the saved object.)
+```{r}
+res/1000*300
+```
+
+5. Enter the following observed catches into a vector called `ct` -- 87, 54, 12, 98, 45, 5, 78.
+```{r}
+ct <- c(87,54,12,98,45,5,78) 
+```
+
+6. Enter the following efforts (number of nets) into a vector called `ft` -- 3, 3, 2, 5, 2, 2, 4.
+```{r}
+ft <- c(3,3,2,5,2,2,4)
+```
+
+7. Use your `ct` and `ft` to compute a vector called `cpe` that contains the CPE (number of fish per net).
+```{r}
+( cpe <- ct/ft )
+```
+
+8. Find the mean CPE.
+```{r}
+mean(cpe)
+```
+
+9. Use R code to find the third CPE.
+```{r}
+cpe[3]
+```
+
+10. Use R code to simultaneously find the third and fifth CPEs.
+```{r}
+cpe[c(3,5)]
+```
+
+11. Use R code to eliminate the seventh CPE (but retain the other six CPEs).
+```{r}
+cpe[-7]
+```
+
+12. Use R code to find the CPEs for ONLY the days when two nets were fished.
+```{r}
+cpe[ft==2]
+```
+
+13. Find the mean CPE for ONLY those days when three or more nets were fished.
+```{r}
+cpe.gt3 <- cpe[ft>=3]
+mean(cpe.gt3)
+```
+
+14. Save your R script, close RStudio, open RStudio, and re-run your script.
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Basics.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

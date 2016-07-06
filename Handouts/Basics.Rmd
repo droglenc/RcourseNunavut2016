@@ -1,0 +1,85 @@
+---
+title: "Very Quick R Basics"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{R Basics}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+library(knitr)
+source("../knitr_setup.R")
+```
+
+----
+
+# Load Necessary Packages
+```{r results='hide', warning=FALSE, message=FALSE}
+library(FSA)  # for mrClosed()
+```
+
+# Expressions, Assignments, and Objects
+```{r}
+3+4*2
+res <- 3+4*2
+res
+( res <- (2+3)*(7+2) )
+```
+
+----
+
+# Functions
+## Names and Arguments
+```{r}
+sqrt(17)
+( res <- sqrt(17) )
+dat <- c(3,6,8,3,5,6,2,7,6,8,2,10)
+mean(dat)
+mean(dat,trim=0.1)
+```
+
+## Constructor and Extractor Functions
+```{r eval=-2}
+mr1 <- mrClosed(M=346,n=184,m=49,method="Chapman")
+mr1
+summary(mr1)
+summary(mr1,verbose=TRUE)
+confint(mr1,verbose=TRUE)
+```
+
+----
+
+# Vectors
+## Data Types
+```{r}
+( lake <- c("Deep","Long","Star","Twin") )
+( numSpec <- c(4,8,7,3) )
+( maxDepth <- c(6.5,7.8,3.8,25.6) )
+( springFed <- c(TRUE,FALSE,FALSE,TRUE) )
+```
+
+## Selecting Individuals (by Position)
+```{r error=TRUE}
+lake[1]
+lake[2]
+lake[-1]
+lake[2,3,4]
+lake[c(2,3,4)]
+```
+
+## Selecting Individuals (by Condition)
+```{r}
+lake[c(TRUE,FALSE,FALSE,TRUE)]
+lake=="Star"
+maxDepth[lake=="Star"]
+numSpec[maxDepth<7]
+```
+
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Basics.Rmd",moreItems="knitr",out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

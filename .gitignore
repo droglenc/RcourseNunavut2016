@@ -1,0 +1,24 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# administrative files
+Admin/
+
+# Intermediate files
+CoursePrep/*.log
+CoursePrep/*.synctex.gz
+CoursePrep/*.tex
+CourseMaterial/*.log
+CourseMaterial/*.synctex.gz
+CourseMaterial/*.tex
+CourseMaterial/Exercises/*.log
+CourseMaterial/Exercises/*.synctex.gz
+CourseMaterial/Exercises/*.
+CourseMaterial/Exercises/Figs/
+CourseMaterial/Figs/
+CourseMaterial/Slides/cache/
+CourseMaterial/Slides/Figs/
+
+# produced vignettes
+.Rproj.user

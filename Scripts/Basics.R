@@ -6,6 +6,7 @@ library(FSA)  # for mrClosed()
 res <- 3+4*2
 res
 ( res <- (2+3)*(7+2) )
+res*2
 
 sqrt(17)
 ( res <- sqrt(17) )
@@ -36,4 +37,4 @@ maxDepth[lake=="Star"]
 numSpec[maxDepth<7]
 
 
-# Script created at 2016-07-05 15:21:53
+# Script created at 2016-07-06 08:18:08

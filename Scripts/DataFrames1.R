@@ -4,8 +4,7 @@ library(FSA)    # for headtail()
 library(readxl) # for read_excel()
 library(dplyr)  # for mutate()
 
-# You will need to set your working directory to where your external data
-# files (and scripts) are located.
+# Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 
 dSC <- read.csv("SawyerCo_reduced.csv")
@@ -42,4 +41,4 @@ str(dNU)
 dNU$FL
 
 
-# Script created at 2016-07-05 15:19:29
+# Script created at 2016-07-06 08:24:19

@@ -28,6 +28,7 @@ library(FSA)  # for mrClosed()
 res <- 3+4*2
 res
 ( res <- (2+3)*(7+2) )
+res*2
 ```
 
 ----
@@ -42,6 +43,7 @@ mean(dat)
 mean(dat,trim=0.1)
 ```
 
+\newpage
 ## Constructor and Extractor Functions
 ```{r eval=-2}
 mr1 <- mrClosed(M=346,n=184,m=49,method="Chapman")

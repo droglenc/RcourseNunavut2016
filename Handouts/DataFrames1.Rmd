@@ -27,8 +27,7 @@ library(dplyr)  # for mutate()
 
 ## Set Working Directory
 ```{r eval=FALSE}
-# You will need to set your working directory to where your external data
-# files (and scripts) are located.
+# Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 ```
 
@@ -62,6 +61,7 @@ tmp$'Location - Name'[1:10]
 
 \newpage
 ## An Alternative -- More Work, But More Useful Result
+\vspace{-12pt}
 ```{r warning=FALSE}
 # Get new names and defined data types
 ( meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE) )

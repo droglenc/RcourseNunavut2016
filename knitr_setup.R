@@ -1,3 +1,5 @@
+library(knitr)
+
 ## knitr custom hooks
 # set default plot options
 #knit_hooks$set(plot = function(x, options) "")

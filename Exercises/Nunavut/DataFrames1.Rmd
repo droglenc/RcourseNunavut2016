@@ -1,0 +1,39 @@
+---
+title: "data.frames I"
+subtitle: "Exercise - Nunavut"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{data.frames I Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+library(readxl)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+```{r message=FALSE, warning=FALSE}
+source("NU_readdata.R")
+```
+
+
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("DataFrames1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

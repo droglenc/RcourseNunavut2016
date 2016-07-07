@@ -1,0 +1,88 @@
+---
+title: "Summarization I"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Summarization I}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+source("../knitr_setup.R")
+```
+
+----
+
+# Preliminaries
+## Load Necessary Packages
+```{r results='hide', warning=FALSE, message=FALSE}
+library(FSA)     # for filterD(), hist(), Summarize()
+library(dplyr)   # for mutate()
+```
+
+## Load Data
+```{r}
+# Set your working directory to where your external data files (and scripts) are located.
+setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+dSC <- read.csv("SawyerCo_reduced.csv")
+names(dSC)
+dSC <- mutate(dSC,sex=mapvalues(sex,from="",to="ND"),fyear=factor(year))
+LChip_WAE <- filterD(dSC,waterbody=="LAKE CHIPPEWA",species=="Walleye")
+LChip_WAE11 <- filterD(LChip_WAE,year==2011)
+```
+```{r}
+Sturg <- filterD(dSC,species=="Lake Sturgeon",waterbody %in% c("CHIPPEWA RIVER","HUNTER LAKE"))
+```
+
+----
+
+# Univariate Summaries -- Categorical Variables
+```{r}
+( t_sex <- xtabs(~sex,data=LChip_WAE11) )
+t_sex1 <- t_sex[-1]
+( tp_sex1 <- prop.table(t_sex1)*100 )
+```
+
+```{r fig.show='hold'}
+barplot(t_sex1)  # Left
+barplot(tp_sex1,xlab="Sex",ylab="Percent of Sample",ylim=c(0,60),col="black")  # Right
+```
+
+# Univariate Summaries -- Quantitative Variables
+```{r fig.show='hold'}
+hist(~len,data=LChip_WAE11,xlab="Total Length (mm)",ylim=c(0,1000),w=10)  # Left
+hist(~len,data=LChip_WAE11,xlab="Total Length (mm)",ylim=c(0,2500),breaks=seq(100,800,25))  # Right
+```
+
+```{r}
+Summarize(~len,data=LChip_WAE11,digits=1)
+```
+
+# Bivariate Summaries -- Categorical Variables
+```{r}
+( t_seas <- xtabs(~mon+fyear,data=LChip_WAE) )
+round(prop.table(t_seas,margin=2)*100,1)
+round(prop.table(t_seas,margin=1)*100,1)
+round(prop.table(t_seas)*100,1)
+```
+
+
+# Bivariate Summaries -- Quantitative Variables
+```{r fig.show="hold"}
+plot(weight~len,data=Sturg) # Left
+plot(weight~len,data=Sturg,pch=19,col=col2rgbt("black",1/3),
+     ylab="Weight (g)",xlab="Total Length (mm)")  # Right
+```
+```{r}
+with(Sturg,cor(weight,len))
+with(Sturg,cor(weight,len,use="pairwise.complete.obs"))
+with(Sturg,cor(weight,len,use="pairwise.complete.obs",method="spearman"))
+```
+
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Summarization1.Rmd",moreItems="knitr",out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

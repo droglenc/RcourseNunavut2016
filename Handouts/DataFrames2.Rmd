@@ -23,7 +23,7 @@ library(FSA)    # for headtail(), filterD()
 library(dplyr)  # for select(), mutate(), filter()
 ```
 
-## Loading Data from External CSV File
+## Load Data from External CSV File
 ```{r}
 # Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")

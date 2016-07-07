@@ -1,0 +1,93 @@
+---
+title: "Summarization I"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Summarization I Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object, create factor versions of the `loc` and `year` variables, and answer the following questions.
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+dWE <- mutate(dWE,floc=factor(loc),fyear=factor(year))
+str(dWE)
+```
+    a. How many fish were collected from each location?
+```{r}
+( n_loc <- xtabs(~floc,data=dWE) )
+```
+    b. What percent of all fish collected were from each location? [*Show results as a table rounded to one decimal place and as a figure.*]
+    
+```{r}
+p_loc <- prop.table(n_loc)*100
+round(p_loc,1)
+barplot(p_loc,xlab="Location Code",ylab="Percent of All Fish Sampled")
+```
+
+    c. Construct a table that shows the percentage (to one decimal) of females (and males) collected by year.
+```{r}
+n_sexyr <- xtabs(~sex+year,data=dWE)
+round(prop.table(n_sexyr,margin=2)*100,1)
+```
+    d. Construct a table that shows the number of females (and males) collected by year and location.
+```{r}
+( n_sexyrloc <- xtabs(~sex+year+loc,data=dWE) )
+```
+
+2. Isolate the Walleye captured at location 1 in 2014.  Use these data to answer the questions below.
+```{r}
+dWE_14_1 <- filterD(dWE,year==2014,loc==1)
+```
+    a. Construct a length frequency graphic.  [*Experiment with different bin widths*]
+```{r}
+hist(~tl,data=dWE_14_1,w=10,xlab="Total Length (mm)",ylim=c(0,100))
+```
+
+    b. Summarize (numerically) the length measurements.
+```{r}
+Summarize(~tl,data=dWE_14_1,digits=1)
+```
+    c. Construct an age frequency graphic.
+```{r}
+hist(~age,data=dWE_14_1,w=1,xlab="Age")
+```
+
+    d. Summarize (numerically) the age estimates.
+```{r}
+Summarize(~age,data=dWE_14_1,digits=1)
+```
+    e. Examine the length-age relationship.
+```{r}
+plot(tl~age,data=dWE_14_1,pch=19,col=col2rgbt("black",1/10))
+```
+
+    f. Examine (graphically and numerically) the log-log transformed weight-length relationship.
+```{r}
+dWE_14_1 <- mutate(dWE_14_1,logtl=log(tl),logw=log(w))
+plot(logw~logtl,data=dWE_14_1,pch=19,col=col2rgbt("black",1/10))
+with(dWE_14_1,cor(logw,logtl))
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Summarization1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

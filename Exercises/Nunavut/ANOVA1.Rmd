@@ -1,0 +1,63 @@
+---
+title: "One-Way ANOVA"
+subtitle: "Exercise - Nunavut"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{One-Way ANOVA Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(car)
+library(multcomp)
+library(FSA)
+library(dplyr)
+library(readxl)
+library(plotrix)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object (make sure to use a method that creates easily usable variable names and useful data types).
+```{r message=FALSE, warning=FALSE}
+source("NU_readdata.R")
+dNU_FW <- filterD(dNU,water.type=="Freshwater",year>2000)
+```
+```{r}
+hist(FL~fyear,data=dNU_FW,w=25,xlim=c(100,800))
+dNU_FW <- filterD(dNU_FW,FL<1500)
+```
+```{r}
+aov1 <- lm(FL~fyear,data=dNU_FW)
+residPlot(aov1)
+leveneTest(aov1)
+anova(aov1)
+mc1 <- glht(aov1,mcp(fyear="Tukey"))
+summary(mc1)
+cld(mc1)
+```
+```{r}
+sum <- Summarize(FL~fyear,data=dNU_FW)
+sum <- select(sum,fyear,n,mean,sd)
+sum <- mutate(sum,year=fact2num(fyear),se=sd/sqrt(n),
+                   LCI=mean-qt(0.975,df=n-1)*se,UCI=mean+qt(0.975,df=n-1)*se)
+with(sum,plotCI(year,mean,li=LCI,ui=UCI,pch=19,xlim=c(2009.8,2014.2),ylim=c(475,600),
+                     xlab="Year",ylab="Mean Fork Length (mm)"))
+with(sum,text(year,UCI,c("c","ab","bc","a","c"),pos=3))
+
+```
+
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ANOVA1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

@@ -1,0 +1,89 @@
+---
+title: "Summarization I"
+subtitle: "Exercise - Nunavut"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Summarization I Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+library(readxl)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+```{r message=FALSE, warning=FALSE}
+source("NU_readdata.R")
+```
+
+    a. How many fish were collected from each year?
+```{r}
+( n_yr <- xtabs(~fyear,data=dNU) )
+```
+    b. What percent of all fish collected were from each year? [*Show results as a table rounded to one decimal place and as a figure.*]
+    
+```{r}
+p_yr <- prop.table(n_yr)*100
+round(p_yr,1)
+barplot(p_yr,xlab="Year",ylab="Percent of All Fish Sampled")
+```
+
+    c. Construct a table that shows the percentage (to one decimal) of females (and males) collected by year.
+```{r}
+n_sexyr <- xtabs(~sex+fyear,data=dNU)
+round(prop.table(n_sexyr,margin=2)*100,1)
+```
+    d. Construct a table that shows the number in each maturity stage collected by year and sex.
+```{r}
+( n_matsexyr <- xtabs(~mat+year+sex,data=dNU) )
+```
+
+2. Isolate the Arctic Charr captured in 2014.  Use these data to answer the questions below.
+```{r}
+dNU_14 <- filterD(dNU,year==2014)
+```
+    a. Construct a length frequency graphic.  [*Experiment with different bin widths*]
+```{r}
+hist(~FL,data=dNU_14,w=10,xlab="Fork Length (mm)")
+```
+
+    b. Summarize (numerically) the length measurements.
+```{r}
+Summarize(~FL,data=dNU_14,digits=1)
+```
+    c. Summarize the weight measurements.
+```{r}
+hist(~wt,data=dNU_14,w=100,xlab="Weight (grams)")
+Summarize(~wt,data=dNU_14,digits=1)
+```
+    e. Examine the weight-length relationship.
+```{r}
+plot(wt~FL,data=dNU,pch=19,col=col2rgbt("black",1/10))
+```
+
+    f. Examine (graphically and numerically) the log-log transformed weight-length relationship.
+```{r}
+dNU_14 <- mutate(dNU_14,logfl=log(FL),logwt=log(wt))
+plot(logwt~logfl,data=dNU_14,pch=19,col=col2rgbt("black",1/10))
+with(dNU_14,cor(logwt,logfl))
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Summarization1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

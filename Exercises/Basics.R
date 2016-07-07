@@ -28,4 +28,4 @@ cpe.gt3 <- cpe[ft>=3]
 mean(cpe.gt3)
 
 
-# Script created at 2016-07-06 15:36:45
+# Script created at 2016-07-07 15:34:12

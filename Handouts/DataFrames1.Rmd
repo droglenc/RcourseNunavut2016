@@ -32,7 +32,7 @@ setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 
 ----
 
-# Loading Data from External CSV File
+# Load Data from External CSV File
 ```{r R.options=list(max.print=72)}
 dSC <- read.csv("SawyerCo_reduced.csv")
 str(dSC)
@@ -44,7 +44,7 @@ dSC$len[c(1,3,5)]
 
 ----
 
-# Loading Data from External Excel File
+# Load Data from External Excel File
 ## Demonstrate A Mess
 ```{r echo=-c(1:3,9),error=TRUE, warning=FALSE}
 ################################################################################

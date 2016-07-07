@@ -1,0 +1,71 @@
+---
+title: "One-Way ANOVA"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{One-Way ANOVA Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(car)
+library(multcomp)
+library(FSA)
+library(dplyr)
+library(readxl)
+library(plotrix)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object, create a factor version of the `loc` variable, and determine if the mean weight of Walleye captured in 2014 differs among locations.  Also provide a summary graphic.  [*Note that you should consider performing the hypothesis test with log-transformed weights.*]
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+dWE <- mutate(dWE,floc=factor(loc),fyear=factor(year),logw=log(w))
+dWE_13 <- filterD(dWE,year==2013)
+```
+```{r fig.width=6}
+aov1 <- lm(w~floc,data=dWE_13)
+residPlot(aov1)
+leveneTest(aov1)
+```
+```{r fig.width=6}
+aov2 <- lm(logw~floc,data=dWE_13)
+residPlot(aov2)
+leveneTest(aov2)
+```
+```{r}
+mc2 <- glht(aov2,mcp(floc="Tukey"))
+summary(mc2)
+cld(mc2)
+sum <- Summarize(logw~floc,data=dWE_13)
+sum <- select(sum,floc,n,mean,sd)
+sum <- mutate(sum,loc=fact2num(floc),se=sd/sqrt(n),
+                   LCI=mean-qt(0.975,df=n-1)*se,UCI=mean+qt(0.975,df=n-1)*se)
+with(sum,plotCI(loc,mean,li=LCI,ui=UCI,pch=19,ylim=c(6.4,7.4),xlim=c(0.8,3.2),
+                     xlab="Location Code",ylab="Mean Log Weight (g)"))
+with(sum,text(loc,UCI,c("a","b","c"),pos=3))
+```
+```{r}
+sum2 <- mutate(sum,bmean=exp(mean),bLCI=exp(LCI),bUCI=exp(UCI))
+sum2 <- select(sum2,-(floc:sd),-(se:UCI))
+with(sum2,plotCI(loc,bmean,li=bLCI,ui=bUCI,pch=19,ylim=c(600,1600),xlim=c(0.8,3.2),
+                     xlab="Location Code",ylab="Mean Weight (g)"))
+with(sum2,text(loc,bUCI,c("a","b","c"),pos=3))
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ANOVA1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

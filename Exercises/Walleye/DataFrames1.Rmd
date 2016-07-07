@@ -1,6 +1,6 @@
 ---
 title: "data.frames I"
-subtitle: "Exercise"
+subtitle: "Exercise - Walleye"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -13,8 +13,9 @@ geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
 
 ```{r echo=FALSE, results='hide', message=FALSE}
 showkey <- FALSE
-source("../knitr_setup.R")
-opts_chunk$set(echo=showkey, results=ifelse(showkey,"markup","hide"))
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
 library(FSA)
 ```
 
@@ -47,22 +48,6 @@ class(dWE[,2])
 ```
 
 ----
-
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
-2. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
-```{r message=FALSE, warning=FALSE}
-library(readxl)
-library(dplyr)
-( meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE) )
-dNU <- read_excel("PG027.SA.Data.xlsx",na="nd",skip=1,
-                  col_names=meta$new_names,col_types=meta$new_types)
-dNU <- mutate(dNU,netset.time=format(netset.time,"%T"),netlift.time=format(netlift.time,"%T"),
-              fyear=factor(year),loc=factor(loc),locAKA=factor(locAKA),water.type=factor(water.type),
-              spec=factor(spec),sex=factor(sex),mat=factor(mat),life.hist=factor(life.hist))
-dNU <- as.data.frame(dNU)
-str(dNU)
-```
 
 ```{r echo=FALSE, results="hide", message=FALSE}
 purl2("DataFrames1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")

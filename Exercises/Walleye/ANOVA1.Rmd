@@ -20,7 +20,6 @@ library(car)
 library(multcomp)
 library(FSA)
 library(dplyr)
-library(readxl)
 library(plotrix)
 ```
 

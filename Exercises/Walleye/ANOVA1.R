@@ -4,7 +4,6 @@ library(car)
 library(multcomp)
 library(FSA)
 library(dplyr)
-library(readxl)
 library(plotrix)
 
 dWE <- read.csv("WalleyeErie2.csv")
@@ -37,4 +36,4 @@ with(sum2,plotCI(loc,bmean,li=bLCI,ui=bUCI,pch=19,ylim=c(600,1600),xlim=c(0.8,3.
 with(sum2,text(loc,bUCI,c("a","b","c"),pos=3))
 
 
-# Script created at 2016-07-07 15:36:31
+# Script created at 2016-07-07 21:24:35

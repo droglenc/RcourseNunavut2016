@@ -1,0 +1,85 @@
+---
+title: "SLR Weight-Length Relation"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{SLR Weight-Length Relation Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+dWE <- mutate(dWE,floc=factor(loc),fyear=factor(year),logw=log(w),logtl=log(tl))
+dWE_13 <- filterD(dWE,loc==1,year==2013)
+```
+
+    a. Fit an appropriate (i.e., assess the assumptions) weight-length relationship to these data.
+```{r fig.width=6}
+slr2 <- lm(logw~logtl,data=dWE_13)
+residPlot(slr2)
+```
+
+    b. What is the $r^{2}$ for the fitted relationship?
+```{r}
+( sum <- summary(slr2) )
+sum$r.squared
+```
+
+    c. Provide a table of parameter estimates (and 95% confidence intervals) for the weight-length relationship regression.
+```{r}
+cbind(ests=coef(slr2),confint(slr2))
+```
+
+    d. Predict (with 95% prediction interval) the **weight** of a fish with a given length (i.e., choose a reasonable length)?
+```{r}
+tmp <- data.frame(logtl=log(c(100,200,300,400,500)))
+predW <- predict(slr2,tmp,interval="prediction")
+exp(predW)
+```
+
+    e. Provide summary graphics of the weight-length relationship regression on two scales.
+
+```{r fig.show=ifelse(showkey,"hold","hide")}
+Summarize(~logtl,data=dWE_13,digits=1)
+logL <- seq(5.7,6.5,length.out=199)
+logW <- predict(slr2,data.frame(logtl=logL),interval="prediction")
+plot(logw~logtl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),
+     xlab="log Length (mm)",ylab="log Weight (g)")
+lines(logL,logW[,"fit"],lwd=2)
+lines(logL,logW[,"lwr"],lwd=2,lty=2)
+lines(logL,logW[,"upr"],lwd=2,lty=2)
+L <- exp(logL)
+W <- exp(logW)
+plot(w~tl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),xlab="Length (mm)",ylab="Weight (g)")
+lines(L,W[,"fit"],lwd=2)
+lines(L,W[,"lwr"],lwd=2,lty=2)
+lines(L,W[,"upr"],lwd=2,lty=2)
+```
+
+----
+
+2. [*Time Permitting*] Repeat the above analyses for some other subset of Walleye.
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("SLR_LW.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

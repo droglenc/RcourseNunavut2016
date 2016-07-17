@@ -4,7 +4,18 @@ library(FSA)
 library(dplyr)
 library(readxl)
 
-source("NU_readdata.R")
+source("PG008_readdata.R")
+str(dNU)
+
+ncol(dNU)
+
+nrow(dNU)
+
+names(dNU)[5]
+class(dNU[,5])
+
+names(dNU)[2]
+class(dNU[,2])
 
 
-# Script created at 2016-07-07 15:41:31
+# Script created at 2016-07-17 12:09:21

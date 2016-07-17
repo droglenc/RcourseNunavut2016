@@ -25,12 +25,32 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
-1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+1. Create a "metadata" CSV file that corresponds to the `PG008_original.xlsx` data file.  [Note that the variables in this file are *slightly* different than the variables in the data file used in the handout.  I suggest you start with the metadata file used in the handout and modify it to match the variales in the `PG008_original.xlsx` Excel file.]  Save this file in the same directory as the corresponding data file.
+
+1. Load the `PG008_original.xlsx` file into a data.frame object and change the variable names and types to more readily useable.
 ```{r message=FALSE, warning=FALSE}
-source("NU_readdata.R")
+source("PG008_readdata.R")
+str(dNU)
 ```
 
-
+    a. How many variables are recorded in this data.frame?
+```{r}
+ncol(dNU)
+```
+    b. How many individuals are recorded in this data.frame?
+```{r}
+nrow(dNU)
+```
+    c. What is the name and data type for the fifth variable?  Does the data type make sense?  Does the number of levels for this variable make sense?
+```{r}
+names(dNU)[5]
+class(dNU[,5])
+```
+    d. What is the name and data type for the second variable?
+```{r}
+names(dNU)[2]
+class(dNU[,2])
+```
 
 ----
 

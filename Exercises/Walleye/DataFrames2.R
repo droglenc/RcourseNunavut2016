@@ -32,7 +32,7 @@ headtail(tmp)
 
 ( tmp <- filterD(dWE,sex=="male",year==2013,is.na(w)) )
 
-( tmp <- filterD(dWE,sex=="male",is.na(age)) )
+( tmp <- filterD(dWE,sex=="male",!is.na(age)) )
 
 
-# Script created at 2016-07-07 15:34:40
+# Script created at 2016-07-17 13:03:17

@@ -23,12 +23,61 @@ library(readxl)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
+Answer the following questions by creating an R script and iteratively running the code in RStudio.  For the filtering/subsetting questions, make sure to provide some evidence to support that your filter/subset was successful.
 
-1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
 ```{r message=FALSE, warning=FALSE}
-source("NU_readdata.R")
+source("PG008_readdata.R")
+str(dNU)
 ```
+    a. For this application, remove `locAKA`, `gonad.prsrvd`, `finclip` through `gillarch.frozen`, `lat` through `sky`, `remarks` and `dbedits`.
+```{r}
+dNU <- select(dNU,-locAKA,-gonad.prsrvd,-(finclip:gillarch.frozen),-(lat:sky),-remarks,-dbedits)
+headtail(dNU)
+```
+    b. Add variables that convert the `FL` measurements from mm to inches and the `wt` values from grams to pounds.
+```{r}
+dNU <- mutate(dNU,fl.in=FL/25.4,w.lbs=wt/454)
+headtail(dNU)
+```
+    c. Add a new variable that records the sex of the fish as `male`, `female`, and `unknown`.
+```{r}
+dNU <- mutate(dNU,sex2=mapvalues(sex,from=c("M","F","U"),to=c("male","female","unknown")))
+headtail(dNU)
+```
+    d. Add a new variable that contains the capture year as a factor-type variable (*you may have already done this*).  How many levels of this variable are present in the data.frame?
+```{r}
+levels(dNU$fyear)
+```
+    e. Create a new data.frame that contains only male fish.  [*Show two ways to create this data.frame.*]
+```{r}
+tmp <- filterD(dNU,sex2=="male")
+levels(tmp$sex2)
+```
+    f. Create a new data.frame that contains all fish captured in 2006, 2010, and 2013.
+```{r}
+tmp <- filterD(dNU,year %in% c(2006,2010,2013))
+levels(tmp$fyear)
+```
+    g. Create a new data.frame that contains only females captured in 2010.
+```{r}
+tmp <- filterD(dNU,sex2=="female",year==2010)
+headtail(tmp)
+```
+    h. Create a new data.frame that contains only female fish larger than 750 mm.
+```{r}
+( tmp <- filterD(dNU,sex2=="female",FL>750) )
+```
+    i. Create a new data.frame that contains only males captured in 2002 for which an age was NOT recorded.
+```{r}
+( tmp <- filterD(dNU,sex2=="male",year==2002,is.na(age)) )
+```
+    j. Create a new data.frame that contains only males for which an age WAS recorded.
+```{r warning=showkey}
+( tmp <- filterD(dNU,sex2=="male",!is.na(age)) )
+```
+
+----
 
 ```{r echo=FALSE, results="hide", message=FALSE}
 purl2("DataFrames2.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")

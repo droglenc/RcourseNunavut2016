@@ -39,7 +39,7 @@ headtail(dWE)
 dWE <- mutate(dWE,tl.in=tl/25.4,w.lbs=w/454)
 headtail(dWE)
 ```
-    c. Add a new variable that records the sex of the fish as `M` for "male" and `F` for female?
+    c. Add a new variable that records the sex of the fish as `M` for "male" and `F` for "female."
 ```{r}
 dWE <- mutate(dWE,sex2=mapvalues(sex,from=c("male","female"),to=c("M","F")))
 headtail(dWE)
@@ -73,9 +73,9 @@ headtail(tmp)
 ```{r}
 ( tmp <- filterD(dWE,sex=="male",year==2013,is.na(w)) )
 ```
-    j. Create a new data.frame that contains only males for which an age was NOT recorded.
+    j. Create a new data.frame that contains only males for which an age WAS recorded.
 ```{r warning=showkey}
-( tmp <- filterD(dWE,sex=="male",is.na(age)) )
+( tmp <- filterD(dWE,sex=="male",!is.na(age)) )
 ```
 
 ----

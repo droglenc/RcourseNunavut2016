@@ -34,7 +34,8 @@ lake[c(2,3,4)]
 lake[c(TRUE,FALSE,FALSE,TRUE)]
 lake=="Star"
 maxDepth[lake=="Star"]
+maxDepth<7
 numSpec[maxDepth<7]
 
 
-# Script created at 2016-07-06 14:51:31
+# Script created at 2016-07-17 10:07:44

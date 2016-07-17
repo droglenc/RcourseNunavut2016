@@ -63,7 +63,7 @@ tmp$'Location - Name'[1:10]
 \vspace{-12pt}
 ```{r warning=FALSE}
 # Get new names and defined data types
-( meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE) )
+( meta <- read.csv("PG027.SA_metadata.csv",stringsAsFactors=FALSE) )
 # Now read the data
 dNU <- read_excel("PG027.SA.Data.xlsx",na="nd",skip=1,
                   col_names=meta$new_names,col_types=meta$new_types)
@@ -78,7 +78,7 @@ dNU <- as.data.frame(dNU)
 str(dNU)
 ```
 ```{r R.options=list(max.print=72)}
-dNU$FL
+dNU$loc
 ```
 
 

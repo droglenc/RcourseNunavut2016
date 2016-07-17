@@ -31,7 +31,7 @@ library(FSA)
 87/3
 ```
 
-3. Assign (and view) the result of an expression that calculates the CPE (number of fish per 1000 m of gillnet per night) if 87 fish were captured in 1400 m of gillnet fished for two nights.
+3. Assign to an object (and then view) the result of an expression that calculates the CPE (number of fish per 1000 m of gillnet per night) if 87 fish were captured in 1400 m of gillnet fished for two nights.
 ```{r}
 ( res <- 87/1400/2*1000 )
 ```
@@ -51,7 +51,7 @@ ct <- c(87,54,12,98,45,5,78)
 ft <- c(3,3,2,5,2,2,4)
 ```
 
-7. Use your `ct` and `ft` to compute a vector called `cpe` that contains the CPE (number of fish per net).
+7. Use your `ct` and `ft` vectors to compute a vector called `cpe` that contains the CPE (number of fish per net).
 ```{r}
 ( cpe <- ct/ft )
 ```

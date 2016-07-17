@@ -25,7 +25,7 @@ tmp$'Location - Name'[1:10]
 ################################################################################
 
 # Get new names and defined data types
-( meta <- read.csv("NU_metadata.csv",stringsAsFactors=FALSE) )
+( meta <- read.csv("PG027.SA_metadata.csv",stringsAsFactors=FALSE) )
 # Now read the data
 dNU <- read_excel("PG027.SA.Data.xlsx",na="nd",skip=1,
                   col_names=meta$new_names,col_types=meta$new_types)
@@ -38,7 +38,7 @@ dNU <- mutate(dNU,netset.time=format(netset.time,"%T"),netlift.time=format(netli
 dNU <- as.data.frame(dNU)
 str(dNU)
 
-dNU$FL
+dNU$loc
 
 
-# Script created at 2016-07-06 17:26:44
+# Script created at 2016-07-17 11:35:52

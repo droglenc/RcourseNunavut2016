@@ -25,7 +25,7 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
-1. Load the `PG008_original.xlsx` file into a data.frame object and answer the following questions.
+1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data to only those fish captured in **freshwater** in **2010**.  Use these data for the following questions.
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
 dNU_FW10 <- filterD(dNU,year==2010,water.type %in% c("Freshwater","freshwater"))

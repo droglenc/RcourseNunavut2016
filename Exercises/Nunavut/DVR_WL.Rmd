@@ -25,10 +25,81 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
-1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object (make sure to use a method that creates easily usable variable names and useful data types).
+1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data to only those fish captured in **freshwater** in **2010** for which a sex was determined.  Use these data for the following questions.
 ```{r message=FALSE, warning=FALSE}
-source("NU_readdata.R")
-dNU_FW <- filterD(dNU,water.type=="Freshwater",year>2000)
+source("PG008_readdata.R")
+dNU_FW <- mutate(dNU,logwt=log(wt),logfl=log(FL))
+dNU_FW <- filterD(dNU_FW,!is.na(wt),water.type %in% c("freshwater","Freshwater"))
+## Outlier present at smallest length
+dNU_FW10 <- filterD(dNU_FW,year==2010,logfl>4.7,sex!="U")
+```
+
+    a. Plot the weight-length data separated by sex.  Does there appear to be a difference in the weight-length relationship between the sexes?
+```{r fig.show=ifelse(showkey,'hold','hide')}
+clr1 <- c("black","blue")
+clr2 <- col2rgbt(clr1,1/3)
+plot(wt~FL,data=dNU_FW10,pch=19,col=clr2[sex],xlab="Fork Length (mm)",ylab="Weight (g)")
+plot(logwt~logfl,data=dNU_FW10,pch=19,col=clr2[sex],xlab="log Fork Length (mm)",ylab="log Weight (g)")
+```
+
+    a. Fit an appropriate model for testing whether the weight-length relationship differs between female and male Arctic Charr.  Assess the assumptions of this model.
+```{r fig.width=6}
+dvr1 <- lm(logwt~logfl*sex,data=dNU_FW10)
+residPlot(dvr1,legend=FALSE)
+```
+
+    b. Determine if the weight-length relationship differs between the sexes.
+```{r}
+anova(dvr1)
+```
+
+    c. *IF appropriate*, fit a reduced model.
+```{r}
+dvr2 <- lm(logwt~logfl,data=dNU_FW10)
+```
+
+    d. Provide a table of parameter estimates (and 95% confidence intervals) for the final weight-length relationship regression.  Interpret each parameter estimate.
+```{r}
+cbind(ests=coef(dvr2),confint(dvr2))
+```
+
+    d. Predict (with 95% prediction interval) the **weight** of fish from both sexes with a given length (i.e., choose a reasonable length)?
+```{r}
+tmp <- data.frame(logfl=log(c(200,400,600,800)))
+predW <- predict(dvr2,tmp,interval="prediction")
+cbind(tmp,exp(predW))
+```
+
+    e. Provide summary graphics of the weight-length relationship regression, separated by sex if appropriate, on two scales (i.e., two graphics).
+
+
+2. [*Time Permitting*] Perform a similar analysis to above but for testing whether the weight-length relationship differs between 2013 and 2014 for all Arctic Charr captured in **freshwater**.
+
+```{r}
+dNU_FW1314 <- filterD(dNU_FW,year>=2013)
+dvr3 <- lm(logwt~logfl*fyear,data=dNU_FW1314)
+anova(dvr3)
+cbind(ests=coef(dvr3),confint(dvr3))
+```
+```{r fig.show=ifelse(showkey,"hold","hide")}
+clr1 <- c("red","black")
+clr2 <- col2rgbt(clr1,1/6)
+Summarize(logfl~fyear,data=dNU_FW1314,digits=1)
+logL1 <- seq(4.65,6.75,length.out=199)
+logW1 <- predict(dvr3,data.frame(logfl=logL1,fyear="2013"),interval="prediction")
+plot(logwt~logfl,data=dNU_FW1314,pch=19,col=clr2[fyear],cex=0.7,
+     xlab="log Fork Length (mm)",ylab="log Weight (g)")
+lines(logL1,logW1[,"fit"],lwd=2,col=clr1[1])
+lines(logL1,logW1[,"lwr"],lwd=2,lty=2,col=clr1[1])
+lines(logL1,logW1[,"upr"],lwd=2,lty=2,col=clr1[1])
+logL2 <- seq(5.15,6.75,length.out=199)
+logW2 <- predict(dvr3,data.frame(logfl=logL2,fyear="2014"),interval="prediction")
+lines(logL2,logW2[,"fit"],lwd=2,col=clr1[2])
+lines(logL2,logW2[,"lwr"],lwd=2,lty=2,col=clr1[2])
+lines(logL2,logW2[,"upr"],lwd=2,lty=2,col=clr1[2])
+```
+```{r fig.show=ifelse(showkey,"hold","hide")}
+lwCompPreds(dvr3,qlens.dec=0)
 ```
 
 ----

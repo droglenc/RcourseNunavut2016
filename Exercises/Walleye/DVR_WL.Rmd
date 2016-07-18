@@ -1,0 +1,137 @@
+---
+title: "DVR Weight-Length Relation"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{DVR Weight-Length Relation Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(dplyr)
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+dWE <- mutate(dWE,floc=factor(loc),fyear=factor(year),logw=log(w),logtl=log(tl))
+dWE_13 <- filterD(dWE,loc==1,year==2013)
+```
+
+    a. Plot the weight-length data separated by sex.  Does there appear to be a difference in the weight-length relationship between the sexes?
+```{r fig.show=ifelse(showkey,'hold','hide')}
+clr1 <- c("black","blue")
+clr2 <- col2rgbt(clr1,1/6)
+plot(w~tl,data=dWE_13,pch=19,col=clr2[sex],xlab="Total Length (mm)",ylab="Weight (g)")
+plot(logw~logtl,data=dWE_13,pch=19,col=clr2[sex],xlab="log Total Length (mm)",ylab="log Weight (g)")
+```
+
+    a. Fit an appropriate model for testing whether the weight-length relationship differs between female and male Walleye.  Assess the assumptions of this model.
+```{r fig.width=6}
+dvr1 <- lm(logw~logtl*sex,data=dWE_13)
+residPlot(dvr1,legend=FALSE)
+```
+
+    b. Determine if the weight-length relationship differs between the sexes.
+```{r}
+anova(dvr1)
+```
+
+    c. *IF appropriate*, fit a reduced model.
+```{r}
+dvr2 <- lm(logw~logtl+sex,data=dWE_13)
+```
+
+    d. Provide a table of parameter estimates (and 95% confidence intervals) for the final weight-length relationship regression.  Interpret each parameter estimate.
+```{r}
+cbind(ests=coef(dvr2),confint(dvr2))
+```
+
+    d. Predict (with 95% prediction interval) the **weight** of fish from both sexes with a given length (i.e., choose a reasonable length)?
+```{r}
+tmp <- data.frame(logtl=log(rep(c(350,450,550,650),2)),sex=rep(c("female","male"),each=4))
+predW <- predict(dvr1,tmp,interval="prediction")
+cbind(tmp,exp(predW))
+```
+
+    e. Provide summary graphics of the weight-length relationship regression, separated by sex if appropriate, on two scales (i.e., two graphics).
+
+```{r fig.show=ifelse(showkey,"hold","hide")}
+Summarize(logtl~sex,data=dWE_13,digits=1)
+logL1 <- seq(5.65,6.55,length.out=199)
+logW1 <- predict(dvr2,data.frame(logtl=logL1,sex="female"),interval="prediction")
+plot(logw~logtl,data=dWE_13,pch=19,col=clr2[sex],
+     xlab="log Length (mm)",ylab="log Weight (g)")
+lines(logL1,logW1[,"fit"],lwd=2)
+lines(logL1,logW1[,"lwr"],lwd=2,lty=2)
+lines(logL1,logW1[,"upr"],lwd=2,lty=2)
+logL2 <- seq(5.65,6.45,length.out=199)
+logW2 <- predict(dvr2,data.frame(logtl=logL2,sex="male"),interval="prediction")
+lines(logL2,logW2[,"fit"],lwd=2,col=clr1[2])
+lines(logL2,logW2[,"lwr"],lwd=2,lty=2,col=clr1[2])
+lines(logL2,logW2[,"upr"],lwd=2,lty=2,col=clr1[2])
+L1 <- exp(logL1)
+W1 <- exp(logW1)
+plot(w~tl,data=dWE_13,pch=19,col=clr2[sex],xlab="Length (mm)",ylab="Weight (g)")
+lines(L1,W1[,"fit"],lwd=2)
+lines(L1,W1[,"lwr"],lwd=2,lty=2)
+lines(L1,W1[,"upr"],lwd=2,lty=2)
+L2 <- exp(logL2)
+W2 <- exp(logW2)
+lines(L2,W2[,"fit"],lwd=2,col=clr1[2])
+lines(L2,W2[,"lwr"],lwd=2,lty=2,col=clr1[2])
+lines(L2,W2[,"upr"],lwd=2,lty=2,col=clr1[2])
+```
+
+2. [*Time Permitting*] Perform a similar analysis to above but for testing whether the weight-length relationship differs among the three sampling locations for **female** Walleye captured in 2008.
+
+```{r}
+dWE_F08 <- filterD(dWE,sex=="female",year==2008)
+dvr3 <- lm(logw~logtl*floc,data=dWE_F08)
+anova(dvr3)
+cbind(ests=coef(dvr3),confint(dvr3))
+```
+```{r fig.show=ifelse(showkey,"hold","hide")}
+clr1 <- c("blue","red","black")
+clr2 <- col2rgbt(clr1,1/20)
+Summarize(logtl~floc,data=dWE_F08,digits=1)
+logL1 <- seq(5.65,6.55,length.out=199)
+logW1 <- predict(dvr3,data.frame(logtl=logL1,floc="1"),interval="prediction")
+plot(logw~logtl,data=dWE_13,pch=19,col=clr2[loc],cex=0.7,
+     xlab="log Length (mm)",ylab="log Weight (g)")
+lines(logL1,logW1[,"fit"],lwd=2,col=clr1[1])
+lines(logL1,logW1[,"lwr"],lwd=2,lty=2,col=clr1[1])
+lines(logL1,logW1[,"upr"],lwd=2,lty=2,col=clr1[1])
+logL2 <- seq(5.65,6.65,length.out=199)
+logW2 <- predict(dvr3,data.frame(logtl=logL2,floc="2"),interval="prediction")
+lines(logL2,logW2[,"fit"],lwd=2,col=clr1[2])
+lines(logL2,logW2[,"lwr"],lwd=2,lty=2,col=clr1[2])
+lines(logL2,logW2[,"upr"],lwd=2,lty=2,col=clr1[2])
+logL3 <- seq(5.85,6.65,length.out=199)
+logW3 <- predict(dvr3,data.frame(logtl=logL3,floc="3"),interval="prediction")
+lines(logL3,logW3[,"fit"],lwd=2,col=clr1[3])
+lines(logL3,logW3[,"lwr"],lwd=2,lty=2,col=clr1[3])
+lines(logL3,logW3[,"upr"],lwd=2,lty=2,col=clr1[3])
+```
+```{r fig.show=ifelse(showkey,"hold","hide")}
+lwCompPreds(dvr3,qlens.dec=0)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("DVR_WL.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

@@ -25,7 +25,7 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.  For the filtering/subsetting questions, make sure to provide some evidence to support that your filter/subset was successful.
 
-1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
+1. Load the `PG008_original.xlsx` file into a data.frame object and answer the following questions.
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
 str(dNU)

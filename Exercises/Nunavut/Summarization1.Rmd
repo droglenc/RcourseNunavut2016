@@ -25,9 +25,10 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
-1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object.  Make sure to use a method that creates easily usable variable names and useful data types.
+1. Load the `PG008_original.xlsx` file into a data.frame object and answer the following questions.
 ```{r message=FALSE, warning=FALSE}
-source("NU_readdata.R")
+source("PG008_readdata.R")
+str(dNU)
 ```
 
     a. How many fish were collected from each year?
@@ -52,34 +53,49 @@ round(prop.table(n_sexyr,margin=2)*100,1)
 ( n_matsexyr <- xtabs(~mat+year+sex,data=dNU) )
 ```
 
-2. Isolate the Arctic Charr captured in 2014.  Use these data to answer the questions below.
+2. Isolate the Arctic Charr captured in 2013.  Use these data to answer the questions below.
 ```{r}
-dNU_14 <- filterD(dNU,year==2014)
+dNU_13 <- filterD(dNU,year==2013)
 ```
     a. Construct a length frequency graphic.  [*Experiment with different bin widths*]
 ```{r}
-hist(~FL,data=dNU_14,w=10,xlab="Fork Length (mm)")
+hist(~FL,data=dNU_13,w=20,xlab="Fork Length (mm)")
 ```
 
     b. Summarize (numerically) the length measurements.
 ```{r}
-Summarize(~FL,data=dNU_14,digits=1)
+Summarize(~FL,data=dNU_13,digits=1)
 ```
     c. Summarize the weight measurements.
 ```{r}
-hist(~wt,data=dNU_14,w=100,xlab="Weight (grams)")
-Summarize(~wt,data=dNU_14,digits=1)
+hist(~wt,data=dNU_13,w=100,xlab="Weight (grams)")
+Summarize(~wt,data=dNU_13,digits=1)
 ```
     e. Examine the weight-length relationship.
 ```{r}
-plot(wt~FL,data=dNU,pch=19,col=col2rgbt("black",1/10))
+plot(wt~FL,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
 ```
 
     f. Examine (graphically and numerically) the log-log transformed weight-length relationship.
 ```{r}
-dNU_14 <- mutate(dNU_14,logfl=log(FL),logwt=log(wt))
-plot(logwt~logfl,data=dNU_14,pch=19,col=col2rgbt("black",1/10))
-with(dNU_14,cor(logwt,logfl))
+dNU_13 <- mutate(dNU_13,logfl=log(FL),logwt=log(wt))
+plot(logwt~logfl,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
+with(dNU_13,cor(logwt,logfl))
+```
+
+2. Isolate Arctic Charr captured from a single year where age was estimated for a large number of fish.  [*Hint: Make a frequency table of `age` by `year`.*]  Use these data to answer the questions below.
+```{r}
+xtabs(~age+fyear,data=dNU)
+dNU_10 <- filterD(dNU,year==2010)
+```
+    a. Summarize the age distribution.
+```{r}
+hist(~age,data=dNU_10,w=1,xlab="Age (years)")
+Summarize(~age,data=dNU_10,digits=1)
+```
+    b. Examine the length-age relationship.
+```{r}
+plot(FL~age,data=dNU_10,pch=19,col=col2rgbt("black",1/10))
 ```
 
 ----

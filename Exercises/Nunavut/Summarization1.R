@@ -4,7 +4,8 @@ library(FSA)
 library(dplyr)
 library(readxl)
 
-source("NU_readdata.R")
+source("PG008_readdata.R")
+str(dNU)
 
 ( n_yr <- xtabs(~fyear,data=dNU) )
 
@@ -17,20 +18,28 @@ round(prop.table(n_sexyr,margin=2)*100,1)
 
 ( n_matsexyr <- xtabs(~mat+year+sex,data=dNU) )
 
-dNU_14 <- filterD(dNU,year==2014)
+dNU_13 <- filterD(dNU,year==2013)
 
-hist(~FL,data=dNU_14,w=10,xlab="Fork Length (mm)")
+hist(~FL,data=dNU_13,w=20,xlab="Fork Length (mm)")
 
-Summarize(~FL,data=dNU_14,digits=1)
+Summarize(~FL,data=dNU_13,digits=1)
 
-hist(~wt,data=dNU_14,w=100,xlab="Weight (grams)")
-Summarize(~wt,data=dNU_14,digits=1)
+hist(~wt,data=dNU_13,w=100,xlab="Weight (grams)")
+Summarize(~wt,data=dNU_13,digits=1)
 
-plot(wt~FL,data=dNU,pch=19,col=col2rgbt("black",1/10))
+plot(wt~FL,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
 
-dNU_14 <- mutate(dNU_14,logfl=log(FL),logwt=log(wt))
-plot(logwt~logfl,data=dNU_14,pch=19,col=col2rgbt("black",1/10))
-with(dNU_14,cor(logwt,logfl))
+dNU_13 <- mutate(dNU_13,logfl=log(FL),logwt=log(wt))
+plot(logwt~logfl,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
+with(dNU_13,cor(logwt,logfl))
+
+xtabs(~age+fyear,data=dNU)
+dNU_10 <- filterD(dNU,year==2010)
+
+hist(~age,data=dNU_10,w=1,xlab="Age (years)")
+Summarize(~age,data=dNU_10,digits=1)
+
+plot(FL~age,data=dNU_10,pch=19,col=col2rgbt("black",1/10))
 
 
-# Script created at 2016-07-07 15:43:00
+# Script created at 2016-07-17 18:00:09

@@ -8,13 +8,13 @@ setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 dSC <- read.csv("SawyerCo_reduced.csv")
 names(dSC)
 dSC <- mutate(dSC,sex=mapvalues(sex,from="",to="ND"),fyear=factor(year))
+levels(dSC$waterbody)
+levels(dSC$species)
 LChip_WAE <- filterD(dSC,waterbody=="LAKE CHIPPEWA",species=="Walleye")
 LChip_WAE11 <- filterD(LChip_WAE,year==2011)
 
-Sturg <- filterD(dSC,species=="Lake Sturgeon",waterbody %in% c("CHIPPEWA RIVER","HUNTER LAKE"))
-
 ( t_sex <- xtabs(~sex,data=LChip_WAE11) )
-t_sex1 <- t_sex[-1]
+( t_sex1 <- t_sex[-1] )
 ( tp_sex1 <- prop.table(t_sex1)*100 )
 
 barplot(t_sex1)  # Left
@@ -30,6 +30,8 @@ round(prop.table(t_seas,margin=2)*100,1)
 round(prop.table(t_seas,margin=1)*100,1)
 round(prop.table(t_seas)*100,1)
 
+Sturg <- filterD(dSC,species=="Lake Sturgeon",waterbody %in% c("CHIPPEWA RIVER","HUNTER LAKE"))
+
 plot(weight~len,data=Sturg) # Left
 plot(weight~len,data=Sturg,pch=19,col=col2rgbt("black",1/3),
      ylab="Weight (g)",xlab="Total Length (mm)")  # Right
@@ -39,4 +41,4 @@ with(Sturg,cor(weight,len,use="pairwise.complete.obs"))
 with(Sturg,cor(weight,len,use="pairwise.complete.obs",method="spearman"))
 
 
-# Script created at 2016-07-07 08:24:56
+# Script created at 2016-07-17 17:10:03

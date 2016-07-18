@@ -1,0 +1,132 @@
+---
+title: "von Bertalanffy Growth Function"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{von Bertalanffy Growth Function}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+source("../knitr_setup.R")
+set.seed(33839)   # for reproducibility only
+```
+
+----
+
+# Preliminaries
+## Load Necessary Packages
+```{r results='hide', warning=FALSE, message=FALSE}
+library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(dplyr)    # for mutate(), select()
+library(nlstools) # for nlsBoot()
+```
+
+## Load Data and Make Some Preparations
+```{r}
+# Set your working directory to where your external data files (and scripts) are located.
+setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+dSC <- read.csv("SawyerCo_reduced.csv")
+wae <- filterD(dSC,waterbody=="NELSON LAKE",species=="Walleye",!is.na(len),!is.na(age))
+```
+```{r}
+xlbl <- "Age (yrs)"
+ylbl <- "Total Length (in)"
+clr1 <- "black"
+clr2 <- col2rgbt(clr1,1/5)
+```
+
+## Quick Summaries
+```{r}
+plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
+Summarize(len~age,data=wae,digits=1)
+```
+
+----
+
+\vspace{-24pt}
+# Fit Typical VBGF
+\vspace{-12pt}
+## Declare a Function
+\vspace{-12pt}
+```{r}
+vb <- vbFuns("Typical",msg=TRUE)
+vb
+```
+
+\vspace{-16pt}
+## Find Starting Values
+\vspace{-12pt}
+```{r fig.show='hold', out.height='2.5in'}
+# Demos manual generation with plot ... LEFT plot
+svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE,fixed=list(Linf=525,K=0.3,t0=0))
+# Demos automatic generation ... RIGHT plot
+svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE)
+```
+
+## Fit the Model
+\vspace{-12pt}
+```{r message=FALSE, warning=FALSE, fig.width=6}
+fit1 <- nls(len~vb(age,Linf,K,t0),data=wae,start=svb)
+residPlot(fit1)
+```
+
+## Summarize the Fit
+\vspace{-12pt}
+```{r}
+summary(fit1,correlation=TRUE)
+( cf <- coef(fit1) )
+confint(fit1)
+```
+
+```{r fig.width=7,fig.height=3,fig.show='hold'}
+boot1 <- nlsBoot(fit1,niter=1000)
+str(boot1)
+headtail(boot1$coefboot)
+confint(boot1,plot=TRUE,rows=1,cols=3)
+```
+
+## Make Predictions
+```{r}
+ageX <- 5
+predict(fit1,data.frame(age=ageX))
+pv <- apply(boot1$coefboot,MARGIN=1,FUN=vb,t=ageX)
+quantile(pv,c(0.025,0.975))
+```
+
+## Visualize the Fit
+```{r par1=TRUE, fig.show='hold'}
+plot(len~age,data=wae,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(vb(x,cf),from=2,to=9,n=500,lwd=2,col=clr1,add=TRUE)
+```
+
+----
+
+# Fit Gompertz Growth Function
+```{r par1=TRUE, fig.show='hold'}
+gomp <- GompertzFuns(msg=TRUE)
+plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
+curve(gomp(x,Linf=520,gi=0.3,ti=3),from=2,to=9,n=500,lwd=2,add=TRUE,col="red")
+curve(gomp(x,Linf=520,gi=0.6,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col="blue")
+curve(gomp(x,Linf=520,gi=0.7,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col=clr1)
+```
+```{r}
+fit2 <- nls(len~gomp(age,Linf,gi,ti),data=wae,start=list(Linf=520,gi=0.7,ti=2))
+AIC(fit1,fit2)
+```
+```{r par1=TRUE, fig.show='hold'}
+plot(len~age,data=wae,xlab=xlbl,ylab=ylbl,pch=19,col=clr2,xlim=c(0,10),ylim=c(0,550))
+curve(vb(x,cf),from=0,to=10,n=500,lwd=4,col=clr1,add=TRUE)
+curve(gomp(x,coef(fit2)),from=0,to=10,n=500,lwd=2,col="red",add=TRUE)
+legend("bottomright",c("von Bertalanffy","Gompertz"),col=c("black","red"),lwd=2,bty="n",cex=0.8)
+```
+
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("VBGF1.Rmd",moreItems=c("knitr","seed"),out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

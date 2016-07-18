@@ -1,8 +1,8 @@
 # Nunavut 6-9-Aug-16
 
-library(car)      # leveneTest()
+library(car)      # for leveneTest()
 library(multcomp) # for glht(), mcp()  DO BEFORE dplyr!!
-library(FSA)      # for filterD(), hist(), Summarize()
+library(FSA)      # for filterD(), hist(), Summarize(), dunnTest()
 library(dplyr)    # for mutate(), select()
 library(plotrix)  # for plotCI()
 
@@ -44,4 +44,4 @@ kruskal.test(len~fyear,data=LChip_LMB2)
 dunnTest(len~fyear,data=LChip_LMB2)
 
 
-# Script created at 2016-07-07 09:44:22
+# Script created at 2016-07-17 18:35:34

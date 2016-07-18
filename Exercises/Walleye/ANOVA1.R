@@ -35,5 +35,22 @@ with(sum2,plotCI(loc,bmean,li=bLCI,ui=bUCI,pch=19,ylim=c(600,1600),xlim=c(0.8,3.
                      xlab="Location Code",ylab="Mean Weight (g)"))
 with(sum2,text(loc,bUCI,c("a","b","c"),pos=3))
 
+dWE_1 <- filterD(dWE,loc==1,age==1)
 
-# Script created at 2016-07-07 21:24:35
+aov1 <- lm(tl~fyear,data=dWE_1)
+residPlot(aov1)
+leveneTest(aov1)
+
+mc1 <- glht(aov1,mcp(fyear="Tukey"))
+summary(mc1)
+cld(mc1)
+sum <- Summarize(tl~fyear,data=dWE_1)
+sum <- select(sum,fyear,n,mean,sd)
+sum <- mutate(sum,year=fact2num(fyear),se=sd/sqrt(n),
+                  LCI=mean-qt(0.975,df=n-1)*se,UCI=mean+qt(0.975,df=n-1)*se)
+with(sum,plotCI(year,mean,li=LCI,ui=UCI,pch=19,ylim=c(290,390),xlim=c(2003.8,2014.2),
+                     xlab="Capture Year",ylab="Mean Total Length (mm)"))
+with(sum,text(year,UCI,c("a","b","b","g","d","c","c","d","f","de","ef"),pos=3))
+
+
+# Script created at 2016-07-17 19:19:17

@@ -19,9 +19,9 @@ source("../knitr_setup.R")
 # Preliminaries
 ## Load Necessary Packages
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(car)      # leveneTest()
+library(car)      # for leveneTest()
 library(multcomp) # for glht(), mcp()  DO BEFORE dplyr!!
-library(FSA)      # for filterD(), hist(), Summarize()
+library(FSA)      # for filterD(), hist(), Summarize(), dunnTest()
 library(dplyr)    # for mutate(), select()
 library(plotrix)  # for plotCI()
 ```
@@ -78,6 +78,7 @@ axis(1,c("2011","2013"))
 
 ----
 
+\newpage
 # Kruskal-Wallis Test
 ```{r}
 kruskal.test(len~fyear,data=LChip_LMB2)

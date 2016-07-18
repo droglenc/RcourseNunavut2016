@@ -1,12 +1,12 @@
 ---
-title: "SLR Weight-Length Relation"
+title: "DVR Weight-Length Relation"
 subtitle: "Exercise - Nunavut"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
 - \fancyhead{}
 - \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
-- \fancyfoot[LE,LO]{SLR Weight-Length Relation Exercise}
+- \fancyfoot[LE,LO]{DVR Weight-Length Relation Exercise}
 output: pdf_document
 geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
 ---
@@ -34,5 +34,5 @@ dNU_FW <- filterD(dNU,water.type=="Freshwater",year>2000)
 ----
 
 ```{r echo=FALSE, results="hide", message=FALSE}
-purl2("SLR_LW.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+purl2("DVR_WL.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
 ```

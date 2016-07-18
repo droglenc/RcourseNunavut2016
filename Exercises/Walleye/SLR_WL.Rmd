@@ -81,5 +81,5 @@ lines(L,W[,"upr"],lwd=2,lty=2)
 ----
 
 ```{r echo=FALSE, results="hide", message=FALSE}
-purl2("SLR_LW.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+purl2("SLR_WL.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
 ```

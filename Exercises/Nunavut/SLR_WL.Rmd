@@ -25,11 +25,61 @@ library(readxl)
 
 Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
-1. Load the **NUNAVUT BASED EXCEL** file into a data.frame object (make sure to use a method that creates easily usable variable names and useful data types).
+1. Load the `PG008_original.xlsx` file into a data.frame object and answer the following questions.
 ```{r message=FALSE, warning=FALSE}
-source("NU_readdata.R")
-dNU_FW <- filterD(dNU,water.type=="Freshwater",year>2000)
+source("PG008_readdata.R")
+dNU_FW10 <- filterD(dNU,year==2010,water.type %in% c("Freshwater","freshwater"))
+dNU_FW10 <- mutate(dNU_FW10,logwt=log(wt),logfl=log(FL))
+## Outlier present at smallest length
+dNU_FW10 <- filterD(dNU_FW10,logfl>4.7)
 ```
+
+    a. Fit an appropriate (i.e., assess the assumptions) weight-length relationship to these data.
+```{r fig.width=6}
+slr1 <- lm(logwt~logfl,data=dNU_FW10)
+residPlot(slr1)
+```
+
+    b. What is the $r^{2}$ for the fitted relationship?
+```{r}
+( sum <- summary(slr1) )
+sum$r.squared
+```
+
+    c. Provide a table of parameter estimates (and 95% confidence intervals) for the weight-length relationship regression.
+```{r}
+cbind(ests=coef(slr1),confint(slr1))
+```
+
+    d. Predict (with 95% prediction interval) the **weight** of a fish with a given length (i.e., choose a reasonable length)?
+```{r}
+tmp <- data.frame(logfl=log(c(200,400,600,800)))
+predW <- predict(slr1,tmp,interval="prediction")
+exp(predW)
+```
+
+    e. Provide summary graphics of the weight-length relationship regression on two scales (i.e., two graphics).
+
+```{r fig.show=ifelse(showkey,"hold","hide")}
+Summarize(~logfl,data=dNU_FW10,digits=1)
+logL <- seq(4.85,6.85,length.out=199)
+logW <- predict(slr1,data.frame(logfl=logL),interval="prediction")
+plot(logwt~logfl,data=dNU_FW10,pch=19,col=col2rgbt("black",1/10),
+     xlab="log Length (mm)",ylab="log Weight (g)")
+lines(logL,logW[,"fit"],lwd=2)
+lines(logL,logW[,"lwr"],lwd=2,lty=2)
+lines(logL,logW[,"upr"],lwd=2,lty=2)
+L <- exp(logL)
+W <- exp(logW)
+plot(wt~FL,data=dNU_FW10,pch=19,col=col2rgbt("black",1/10),xlab="Length (mm)",ylab="Weight (g)")
+lines(L,W[,"fit"],lwd=2)
+lines(L,W[,"lwr"],lwd=2,lty=2)
+lines(L,W[,"upr"],lwd=2,lty=2)
+```
+
+----
+
+2. [*Time Permitting*] Repeat the above analyses for some other subset of Arctic Charr.
 
 ----
 

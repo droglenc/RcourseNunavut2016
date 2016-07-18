@@ -55,11 +55,11 @@ predW <- predict(slr2,tmp,interval="prediction")
 exp(predW)
 ```
 
-    e. Provide summary graphics of the weight-length relationship regression on two scales.
+    e. Provide summary graphics of the weight-length relationship regression on two scales (i.e., two graphics).
 
 ```{r fig.show=ifelse(showkey,"hold","hide")}
 Summarize(~logtl,data=dWE_13,digits=1)
-logL <- seq(5.7,6.5,length.out=199)
+logL <- seq(5.65,6.55,length.out=199)
 logW <- predict(slr2,data.frame(logtl=logL),interval="prediction")
 plot(logw~logtl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),
      xlab="log Length (mm)",ylab="log Weight (g)")

@@ -55,14 +55,16 @@ cbind(ests=coef(slr2),confint(slr2))
 
 ## Making Predictions
 ```{r}
-predict(slr2,data.frame(loglen=log(500)),interval="confidence")
-predict(slr2,data.frame(loglen=log(c(500,800))),interval="prediction")
+( p1 <- predict(slr2,data.frame(loglen=log(500)),interval="confidence") )
+exp(p1)
+( p2 <- predict(slr2,data.frame(loglen=log(c(500,800))),interval="prediction") )
+exp(p2)
 ```
 
 ## Summary Plot
 ```{r}
 Summarize(~loglen,data=Sturg,digits=1)
-logL <- seq(6.2,7.4,length.out=199)
+logL <- seq(6.15,7.35,length.out=199)
 logW <- predict(slr2,data.frame(loglen=logL),interval="prediction")
 L <- exp(logL)
 W <- exp(logW)

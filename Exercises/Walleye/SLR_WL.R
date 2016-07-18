@@ -20,7 +20,7 @@ predW <- predict(slr2,tmp,interval="prediction")
 exp(predW)
 
 Summarize(~logtl,data=dWE_13,digits=1)
-logL <- seq(5.7,6.5,length.out=199)
+logL <- seq(5.65,6.55,length.out=199)
 logW <- predict(slr2,data.frame(logtl=logL),interval="prediction")
 plot(logw~logtl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),
      xlab="log Length (mm)",ylab="log Weight (g)")
@@ -35,4 +35,4 @@ lines(L,W[,"lwr"],lwd=2,lty=2)
 lines(L,W[,"upr"],lwd=2,lty=2)
 
 
-# Script created at 2016-07-17 19:59:08
+# Script created at 2016-07-17 22:39:37

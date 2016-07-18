@@ -21,11 +21,13 @@ residPlot(slr2)
 summary(slr2)
 cbind(ests=coef(slr2),confint(slr2))
 
-predict(slr2,data.frame(loglen=log(500)),interval="confidence")
-predict(slr2,data.frame(loglen=log(c(500,800))),interval="prediction")
+( p1 <- predict(slr2,data.frame(loglen=log(500)),interval="confidence") )
+exp(p1)
+( p2 <- predict(slr2,data.frame(loglen=log(c(500,800))),interval="prediction") )
+exp(p2)
 
 Summarize(~loglen,data=Sturg,digits=1)
-logL <- seq(6.2,7.4,length.out=199)
+logL <- seq(6.15,7.35,length.out=199)
 logW <- predict(slr2,data.frame(loglen=logL),interval="prediction")
 L <- exp(logL)
 W <- exp(logW)
@@ -36,4 +38,4 @@ lines(L,W[,"lwr"],lwd=2,lty=2)
 lines(L,W[,"upr"],lwd=2,lty=2)
 
 
-# Script created at 2016-07-17 19:58:39
+# Script created at 2016-07-17 22:10:01

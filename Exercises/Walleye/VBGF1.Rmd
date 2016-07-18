@@ -1,0 +1,96 @@
+---
+title: "von Bertalanffy Growth Function"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{von Bertalanffy Growth Function Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(dplyr)    # for mutate(), select()
+library(nlstools) # for nlsBoot()
+```
+
+----
+
+Answer the following questions by creating an R script and iteratively running the code in RStudio.
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
+```{r}
+dWE <- read.csv("WalleyeErie2.csv")
+dWE_13 <- filterD(dWE,loc==1,year==2013)
+```
+
+    a. Examine the plot of length versus age.  Do the data look linear or curved, is there an obvious asymptote, are young fish well represented, how variable are lengths within ages?
+```{r fig.width=6}
+xlbl <- "Age (yrs)"
+ylbl <- "Total Length (in)"
+clr1 <- "black"
+clr2 <- col2rgbt(clr1,1/9)
+
+plot(tl~age,data=dWE_13,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
+```
+
+    b. Fit the typical parameterization of the VBGF to these data.  Construct a fitted-line plot (i.e., superimpose the fitted VBGF onto the length versus age plot) and a residual plot and comment on model fit.
+```{r fig.show=ifelse(showkey,'hold','hide')}
+vb <- vbFuns("Typical")
+svb <- vbStarts(tl~age,data=dWE_13,type="Typical",plot=TRUE)
+fit1 <- nls(tl~vb(age,Linf,K,t0),data=dWE_13,start=svb)
+cf <- coef(fit1)
+plot(tl~age,data=dWE_13,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(vb(x,cf),from=1,to=14,n=500,lwd=2,col=clr1,add=TRUE)
+```
+```{r fig.width=6, fig.show=ifelse(showkey,'hold','hide'), warning=FALSE}
+residPlot(fit1)
+```
+
+    c. Compute the correlation between parameter values.  Comment
+```{r}
+summary(fit1,correlation=TRUE)
+```
+
+    d. Construct a table of parameter estimates with 95% bootstrap confidence intervals.  Carefully interpret the value of each parameter.  Comment on how realistic you think each estimate is and the relative widths of the confidence intervals.
+```{r}
+boot1 <- nlsBoot(fit1,niter=1000)
+cbind(Ests=cf,confint(boot1))
+```
+
+    e. Predict the mean length, with 95% confidence interval, for an age-3 Walleye.  Comment on the width of this confidence interval? 
+```{r}
+ageX <- 3
+predict(fit1,data.frame(age=ageX))
+pv <- apply(boot1$coefboot,MARGIN=1,FUN=vb,t=ageX)
+quantile(pv,c(0.025,0.975))
+```
+
+----
+
+2. [*Time Permitting*] Repeat the previous question but using either the original, Gallucci and Quinn, or Mooij parameterizations of the VBGF.  [Note that you can see the equations for these VBGFs with, for example, `growthFunShow("vonBertalanffy",param="GallucciQuinn",plot=TRUE)`.  You can declare a function for these VBGFs by using, for example, `vb <- vbFuns("GallucciQuinn")`.]
+    a. How does the fit of this model (and estimates of the common parameters) compare with the results from the typical VBGF fit in the previous question?
+```{r}
+vbgq <- vbFuns("GallucciQuinn")
+svbgq <- vbStarts(tl~age,data=dWE_13,type="GallucciQuinn")
+fitgq <- nls(tl~vbgq(age,omega,K,t0),data=dWE_13,start=svbgq)
+cfgq <- coef(fitgq)
+plot(tl~age,data=dWE_13,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(vb(x,cf),from=1,to=14,n=500,lwd=5,col=clr1,add=TRUE)
+curve(vbgq(x,cfgq),from=1,to=14,n=500,lwd=2,col="red",add=TRUE)
+cf
+cfgq
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("VBGF1.Rmd",moreItems=c("knitr","showkey","seed"),topnotes="Nunavut 6-9-Aug-16")
+```

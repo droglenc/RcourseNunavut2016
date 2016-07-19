@@ -20,7 +20,6 @@ Summarize(len~age+waterbody,data=wae,digits=1)
 
 ( svOm <- vbStarts(len~age,data=wae,plot=TRUE) )
 ( svLKt <- Map(rep,svOm,c(2,2,2)) )
-svLKt <- list(Linf=c(550,510),K=c(0.2,0.2),t0=c(-2.5,-2.5))
 
 vbLKt <- len~Linf[waterbody]*(1-exp(-K[waterbody]*(age-t0[waterbody])))
 fitLKt <- nls(vbLKt,data=wae,start=svLKt)
@@ -85,4 +84,4 @@ mnames <- c("{Omega}","{Linf}","{K}","{t0}","{Linf,K}","{Linf,t0}","{K,t0}","{Li
 aictab(ms,mnames)
 
 
-# Script created at 2016-07-18 13:12:08
+# Script created at 2016-07-18 17:20:10

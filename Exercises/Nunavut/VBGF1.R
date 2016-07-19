@@ -6,7 +6,7 @@ library(nlstools) # for nlsBoot()
 library(readxl)
 
 source("PG008_readdata.R")
-dNU_FW <- filterD(dNU,!is.na(wt),!is.na(age),water.type %in% c("freshwater","Freshwater"))
+dNU_FW <- filterD(dNU,!is.na(FL),!is.na(age),water.type %in% c("freshwater","Freshwater"),year==2010)
 # Removed some obvious outliers
 dNU_FW <- filterD(dNU_FW,!(age>10 & FL<200))
 
@@ -22,7 +22,7 @@ svb <- vbStarts(FL~age,data=dNU_FW,type="Typical",plot=TRUE)
 fit1 <- nls(FL~vb(age,Linf,K,t0),data=dNU_FW,start=svb)
 cf <- coef(fit1)
 plot(FL~age,data=dNU_FW,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
-curve(vb(x,cf),from=6,to=35,n=500,lwd=2,col=clr1,add=TRUE)
+curve(vb(x,cf),from=6,to=29,n=500,lwd=2,col=clr1,add=TRUE)
 
 residPlot(fit1)
 
@@ -47,4 +47,4 @@ cf
 cfgq
 
 
-# Script created at 2016-07-18 15:13:09
+# Script created at 2016-07-18 21:37:59

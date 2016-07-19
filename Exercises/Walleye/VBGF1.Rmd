@@ -19,11 +19,10 @@ source("../knitr_Ex_setup.R")
 library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
 library(dplyr)    # for mutate(), select()
 library(nlstools) # for nlsBoot()
+library(AICcmodavg)
 ```
 
 ----
-
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
 1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
 ```{r}
@@ -41,7 +40,7 @@ clr2 <- col2rgbt(clr1,1/9)
 plot(tl~age,data=dWE_13,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
 ```
 
-    b. Fit the typical parameterization of the VBGF to these data.  Construct a fitted-line plot (i.e., superimpose the fitted VBGF onto the length versus age plot) and a residual plot and comment on model fit.
+    b. Fit the typical parameterization of the VBGF to these data.  Construct a fitted-line plot (i.e., superimpose the fitted VBGF onto the length versus age plot) and a residual plot.  Comment on model fit.
 ```{r fig.show=ifelse(showkey,'hold','hide')}
 vb <- vbFuns("Typical")
 svb <- vbStarts(tl~age,data=dWE_13,type="Typical",plot=TRUE)
@@ -54,18 +53,24 @@ curve(vb(x,cf),from=1,to=14,n=500,lwd=2,col=clr1,add=TRUE)
 residPlot(fit1)
 ```
 
-    c. Compute the correlation between parameter values.  Comment
+    c. Compute the correlation between parameter values.  Comment.
 ```{r}
 summary(fit1,correlation=TRUE)
 ```
 
-    d. Construct a table of parameter estimates with 95% bootstrap confidence intervals.  Carefully interpret the value of each parameter.  Comment on how realistic you think each estimate is and the relative widths of the confidence intervals.
+    d. Compute the parameter estimates.  Carefully interpret the value of each parameter.  Comment on how realistic these values are.
 ```{r}
-boot1 <- nlsBoot(fit1,niter=1000)
-cbind(Ests=cf,confint(boot1))
+cf
 ```
 
-    e. Predict the mean length, with 95% confidence interval, for an age-3 Walleye.  Comment on the width of this confidence interval? 
+    e. Construct 95% likelihood profile and bootstrap confidence intervals.  How do the relative widths of the confidence intervals compare (between methods).
+```{r message=FALSE}
+confint(fit1)
+boot1 <- nlsBoot(fit1,niter=1000)
+confint(boot1)
+```
+
+    f. Predict the mean length, with 95% confidence interval, for an age-3 Walleye.  Comment on the width of this confidence interval? 
 ```{r}
 ageX <- 3
 predict(fit1,data.frame(age=ageX))
@@ -76,7 +81,7 @@ quantile(pv,c(0.025,0.975))
 ----
 
 2. [*Time Permitting*] Repeat the previous question but using either the original, Gallucci and Quinn, or Mooij parameterizations of the VBGF.  [Note that you can see the equations for these VBGFs with, for example, `growthFunShow("vonBertalanffy",param="GallucciQuinn",plot=TRUE)`.  You can declare a function for these VBGFs by using, for example, `vb <- vbFuns("GallucciQuinn")`.]
-    a. How does the fit of this model (and estimates of the common parameters) compare with the results from the typical VBGF fit in the previous question?
+    a. How does the fit of this parameterization (and estimates of the common parameters) compare with the results from the typical VBGF fit in the previous question?
 ```{r}
 vbgq <- vbFuns("GallucciQuinn")
 svbgq <- vbStarts(tl~age,data=dWE_13,type="GallucciQuinn")
@@ -87,6 +92,38 @@ curve(vb(x,cf),from=1,to=14,n=500,lwd=5,col=clr1,add=TRUE)
 curve(vbgq(x,cfgq),from=1,to=14,n=500,lwd=2,col="red",add=TRUE)
 cf
 cfgq
+```
+
+----
+
+3. [*Time Permitting*] Repeat the first question but using either the Gompertz or logistic growth functions.  [Note that you can declare a logistic growth function by using, for example, `lgf <- logisticFuns(msg=TRUE)`.]
+    a. How does the fit of this growth function compare with the results from the typical VBGF fit in the first question?
+```{r fig.show='hide'}
+lgf <- logisticFuns()
+plot(tl~age,data=dWE_13,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(lgf(x,Linf=625,gninf=0.4,ti=0),from=1,to=14,n=500,lwd=2,col=clr1,add=TRUE)
+svlgf <- list(Linf=625,gninf=0.4,ti=0)
+fitlgf <- nls(tl~lgf(age,Linf,gninf,ti),data=dWE_13,start=svlgf)
+clgf <- coef(fitlgf)
+```
+```{r fig.show='hide'}
+ggf <- GompertzFuns()
+plot(tl~age,data=dWE_13,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(ggf(x,Linf=625,gi=0.4,ti=0),from=1,to=14,n=500,lwd=2,col=clr1,add=TRUE)
+svggf <- list(Linf=625,gi=0.4,ti=0)
+fitggf <- nls(tl~ggf(age,Linf,gi,ti),data=dWE_13,start=svggf)
+cggf <- coef(fitggf)
+```
+
+```{r}
+plot(tl~age,data=dWE_13,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(vb(x,cf),from=1,to=14,n=500,lwd=6,col=clr1,add=TRUE)
+curve(lgf(x,clgf),from=1,to=14,n=500,lwd=4,col="blue",add=TRUE)
+curve(ggf(x,cggf),from=1,to=14,n=500,lwd=2,col="red",add=TRUE)
+cf
+clgf
+cggf
+aictab(list(fit1,fitlgf,fitggf),modnames=c("von Bertalanffy","logistic","Gompertz"))
 ```
 
 ----

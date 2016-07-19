@@ -1,8 +1,9 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
-library(dplyr)    # for mutate(), select()
-library(nlstools) # for nlsBoot()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(dplyr)      # for mutate(), select()
+library(nlstools)   # for nlsBoot()
+library(AICcmodavg) # for aictab()
 
 # Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
@@ -52,7 +53,7 @@ curve(gomp(x,Linf=520,gi=0.6,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col="blue")
 curve(gomp(x,Linf=520,gi=0.7,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col=clr1)
 
 fit2 <- nls(len~gomp(age,Linf,gi,ti),data=wae,start=list(Linf=520,gi=0.7,ti=2))
-AIC(fit1,fit2)
+aictab(list(fit1,fit2),modnames=c("von Bertalanffy","Gompertz"))
 
 plot(len~age,data=wae,xlab=xlbl,ylab=ylbl,pch=19,col=clr2,xlim=c(0,10),ylim=c(0,550))
 curve(vb(x,cf),from=0,to=10,n=500,lwd=4,col=clr1,add=TRUE)
@@ -60,4 +61,4 @@ curve(gomp(x,coef(fit2)),from=0,to=10,n=500,lwd=2,col="red",add=TRUE)
 legend("bottomright",c("von Bertalanffy","Gompertz"),col=c("black","red"),lwd=2,bty="n",cex=0.8)
 
 
-# Script created at 2016-07-18 12:38:57
+# Script created at 2016-07-19 09:58:47

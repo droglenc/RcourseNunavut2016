@@ -20,9 +20,10 @@ set.seed(33839)   # for reproducibility only
 # Preliminaries
 ## Load Necessary Packages
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
-library(dplyr)    # for mutate(), select()
-library(nlstools) # for nlsBoot()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(dplyr)      # for mutate(), select()
+library(nlstools)   # for nlsBoot()
+library(AICcmodavg) # for aictab()
 ```
 
 ## Load Data and Make Some Preparations
@@ -115,7 +116,7 @@ curve(gomp(x,Linf=520,gi=0.7,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col=clr1)
 ```
 ```{r}
 fit2 <- nls(len~gomp(age,Linf,gi,ti),data=wae,start=list(Linf=520,gi=0.7,ti=2))
-AIC(fit1,fit2)
+aictab(list(fit1,fit2),modnames=c("von Bertalanffy","Gompertz"))
 ```
 ```{r par1=TRUE, fig.show='hold'}
 plot(len~age,data=wae,xlab=xlbl,ylab=ylbl,pch=19,col=clr2,xlim=c(0,10),ylim=c(0,550))

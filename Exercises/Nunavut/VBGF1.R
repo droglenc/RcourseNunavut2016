@@ -4,6 +4,7 @@ library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
 library(dplyr)    # for mutate(), select()
 library(nlstools) # for nlsBoot()
 library(readxl)
+library(AICcmodavg)
 
 source("PG008_readdata.R")
 dNU_FW <- filterD(dNU,!is.na(FL),!is.na(age),water.type %in% c("freshwater","Freshwater"),year==2010)
@@ -28,8 +29,11 @@ residPlot(fit1)
 
 summary(fit1,correlation=TRUE)
 
+cf
+
+confint(fit1)
 boot1 <- nlsBoot(fit1,niter=1000)
-cbind(Ests=cf,confint(boot1))
+confint(boot1)
 
 ageX <- 18
 predict(fit1,data.frame(age=ageX))
@@ -46,5 +50,28 @@ curve(vbgq(x,cfgq),from=6,to=35,n=500,lwd=2,col="red",add=TRUE)
 cf
 cfgq
 
+lgf <- logisticFuns()
+plot(FL~age,data=dNU_FW,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(lgf(x,Linf=850,gninf=0.2,ti=10),from=5,to=29,n=500,lwd=2,col=clr1,add=TRUE)
+svlgf <- list(Linf=850,gninf=0.2,ti=10)
+fitlgf <- nls(FL~lgf(age,Linf,gninf,ti),data=dNU_FW,start=svlgf)
+clgf <- coef(fitlgf)
 
-# Script created at 2016-07-18 21:37:59
+ggf <- GompertzFuns()
+plot(FL~age,data=dNU_FW,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(ggf(x,Linf=850,gi=0.2,ti=8),from=5,to=29,n=500,lwd=2,col=clr1,add=TRUE)
+svggf <- list(Linf=850,gi=0.2,ti=8)
+fitggf <- nls(FL~ggf(age,Linf,gi,ti),data=dNU_FW,start=svggf)
+cggf <- coef(fitggf)
+
+plot(FL~age,data=dNU_FW,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
+curve(vb(x,cf),from=5,to=29,n=500,lwd=6,col=clr1,add=TRUE)
+curve(lgf(x,clgf),from=5,to=29,n=500,lwd=4,col="blue",add=TRUE)
+curve(ggf(x,cggf),from=5,to=29,n=500,lwd=2,col="red",add=TRUE)
+cf
+clgf
+cggf
+aictab(list(fit1,fitlgf,fitggf),modnames=c("von Bertalanffy","logistic","Gompertz"))
+
+
+# Script created at 2016-07-19 09:56:33

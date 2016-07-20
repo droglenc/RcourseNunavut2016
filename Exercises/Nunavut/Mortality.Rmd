@@ -1,0 +1,77 @@
+---
+title: "Mortality (Catch Curves)"
+subtitle: "Exercise - Nunavut"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Mortality (Catch Curves)}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)      # for filterD(), fact2num(), catchCurve()
+library(dplyr)    # for mutate(), group_by(), summarize()
+library(magrittr)
+library(readxl)
+```
+
+----
+
+1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data.frame to Arctic Charr captured in *freshwaters* in *2007*.  Attempt to estimate the annual mortality rate from these data.
+```{r message=FALSE, warning=FALSE}
+source("PG008_readdata.R")
+dNU_FW07 <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),year==2007,!is.na(age)) %>%
+  group_by(age) %>%
+  summarize(Freq=n()) %>%
+  mutate(logfreq=log(Freq)) %>%
+  as.data.frame()
+plot(logfreq~age,data=dNU_FW07)
+cc07 <- catchCurve(Freq~age,data=dNU_FW07,ages2use=16:30)
+plot(cc07)
+coef(cc07)
+confint(cc07)
+```
+
+----
+
+2. Repeat the above question but with the data from 2002.
+
+```{r message=FALSE, warning=FALSE}
+dNU_FW10 <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),year==2010,!is.na(age)) %>%
+  group_by(age) %>%
+  summarize(Freq=n()) %>%
+  mutate(logfreq=log(Freq)) %>%
+  as.data.frame()
+plot(logfreq~age,data=dNU_FW10)
+cc10 <- catchCurve(Freq~age,data=dNU_FW10,ages2use=20:30)
+plot(cc10)
+coef(cc10)
+confint(cc10)
+```
+
+----
+
+3. Statistically determine if there is a significant difference in the instantaneous mortality rate between Charr captured in 2007 and 2010.
+```{r}
+dNU_FW07 <- mutate(dNU_FW07,year=2007)
+dNU_FW10 <- mutate(dNU_FW10,year=2010)
+dNU_FW0710 <- rbind(filterD(dNU_FW07,age>=16),filterD(dNU_FW10,age>=20)) %>%
+  mutate(fyear=factor(year))
+
+lm1 <- lm(logfreq~age*fyear,data=dNU_FW0710)
+anova(lm1)
+fitPlot(lm1)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Mortality.Rmd",moreItems=c("knitr","showkey","seed"),topnotes="Nunavut 6-9-Aug-16")
+```

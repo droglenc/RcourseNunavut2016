@@ -1,0 +1,129 @@
+---
+title: "Mortality (Catch Curves)"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Mortality (Catch Curves)}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+source("../knitr_setup.R")
+```
+
+----
+
+\vspace{-24pt}
+# Preliminaries
+\vspace{-12pt}
+## Load Necessary Packages
+\vspace{-12pt}
+```{r results='hide', warning=FALSE, message=FALSE}
+library(FSA)      # for filterD(), fact2num(), catchCurve()
+library(dplyr)    # for mutate(), group_by(), summarize()
+```
+
+\vspace{-12pt}
+## Load Data
+\vspace{-12pt}
+```{r}
+# Set your working directory to where your external data files (and scripts) are located.
+setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+dSC <- read.csv("SawyerCo_reduced.csv")
+wae <- filterD(dSC,waterbody=="NELSON LAKE",species=="Walleye",!is.na(age),year==2014)
+```
+
+\vspace{-12pt}
+## Create Age Frequency data.frame (2 Methods)
+\vspace{-12pt}
+```{r}
+d <- data.frame( xtabs(~age,data=wae))
+str(d)
+d <- mutate(d,age=fact2num(age))
+str(d)
+d
+```
+
+```{r}
+wae <- group_by(wae,age)
+d <- summarize(wae,Freq=n())
+str(d)
+d <- as.data.frame(d)
+str(d)
+d
+```
+
+```{r}
+d <- mutate(d,logfreq=log(Freq))
+```
+
+# Catch Curve Analysis
+## Identify Descending Limb
+```{r}
+plot(logfreq~age,data=d,xlab="Age",ylab="Log Frequency",pch=19)
+```
+
+## From First Principles
+```{r out.height='2.5in'}
+cc1 <- lm(logfreq~age,data=filterD(d,age>=5))
+anova(cc1)
+( cf <- coef(cc1) )
+( Z <- -cf["age"] )
+( A <- 1-exp(-Z) )
+plot(logfreq~age,data=d,xlab="Age",ylab="Log Frequency",pch=19)
+abline(cc1)
+```
+
+## Convenience Function
+```{r out.height='2.5in'}
+cc2 <- catchCurve(Freq~age,data=d,ages2use=5:9)
+summary(cc2)
+confint(cc2)
+plot(cc2)
+```
+
+# Compare Mortality Rates
+\vspace{-12pt}
+```{r}
+wae2 <- filterD(dSC,waterbody %in% c("LAKE CHIPPEWA","NELSON LAKE"),
+                species=="Walleye",!is.na(age),year==2014)
+wae2 <- group_by(wae2,waterbody,age)
+d3 <- summarize(wae2,Freq=n())
+d3 <- mutate(d3,logfreq=log(Freq))
+( d3 <- as.data.frame(d3) )
+```
+\vspace{-8pt}
+```{r out.height='2.4in'}
+clr1 <- c("black","blue")
+plot(logfreq~age,data=d3,col=clr1[waterbody],pch=19)
+( d4 <- rbind(filterD(d3,waterbody=="LAKE CHIPPEWA",age>=3),
+              filterD(d3,waterbody=="NELSON LAKE",age>=5)) )
+cc2 <- lm(logfreq~age*waterbody,data=d4)
+anova(cc2)
+```
+\vspace{-8pt}
+```{r out.height='2.4in'}
+ccC <- catchCurve(Freq~age,data=filterD(d3,waterbody=="LAKE CHIPPEWA"),ages2use=3:9)
+coef(ccC)
+confint(ccC)
+ccN <- catchCurve(Freq~age,data=filterD(d3,waterbody=="NELSON LAKE"),ages2use=5:9)
+coef(ccN)
+confint(ccN)
+```
+```{r}
+plot(logfreq~age,data=d3,col=clr1[waterbody],xlab="Age",ylab="Log Frequency")
+points(logfreq~age,data=filterD(d3,waterbody=="LAKE CHIPPEWA",age>=3),pch=19,col=clr1[1])
+points(logfreq~age,data=filterD(d3,waterbody=="NELSON LAKE",age>=5),pch=19,col=clr1[2])
+abline(ccC$lm,col=clr1[1],lwd=2)
+abline(ccN$lm,col=clr1[2],lwd=2)
+legend("bottomleft",levels(d3$waterbody),col=clr1,pch=19,lwd=1,bty="n",cex=0.7)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Mortality.Rmd",moreItems=c("knitr","seed"),out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

@@ -1,0 +1,79 @@
+---
+title: "Mortality (Catch Curves)"
+subtitle: "Exercise - Walleye"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Mortality (Catch Curves)}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+showkey <- FALSE
+source("../knitr_Ex_setup.R")
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)      # for filterD(), fact2num(), catchCurve()
+library(dplyr)    # for mutate(), group_by(), summarize()
+library(magrittr)
+```
+
+----
+
+1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Attempt to compute the annual mortality rate from these data.  Describe any difficulties that you encounter.
+```{r}
+dWE1 <- read.csv("WalleyeErie2.csv") %>%
+  filterD(loc==1)
+dWE1_13 <- filterD(dWE1,year==2013) %>%
+  group_by(age) %>%
+  summarize(Freq=n()) %>%
+  mutate(logfreq=log(Freq)) %>%
+  as.data.frame()
+```
+
+----
+
+2. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1.  Create a data.frame that contains fish from the 2003 year-class captured across many capture years.  Attempt to compute the annual mortality rate from these data.
+```{r}
+( tmp <- xtabs(~age+year,data=dWE1) )
+( ind <- row(tmp)-col(tmp) )
+
+d03 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==0))]),
+                  Freq=tmp[ind==0]) %>%
+  mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
+  mutate(logfreq=log(Freq))
+plot(logfreq~age,data=d03,xlab="Age",ylab="Log Frequency",pch=19)
+cc03a <- catchCurve(Freq~age,data=d03,ages2use=2:9)
+coef(cc03a)
+confint(cc03a)
+plot(cc03a)
+cc03b <- catchCurve(Freq~age,data=d03,ages2use=4:11)
+coef(cc03b)
+confint(cc03b)
+plot(cc03b)
+```
+
+----
+
+3. Repeat the previous questions but for another year-class with sufficient data.
+
+```{r}
+d01 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==2))]),
+                  Freq=tmp[ind==2]) %>%
+  mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
+  mutate(logfreq=log(Freq))
+plot(logfreq~age,data=d01,xlab="Age",ylab="Log Frequency",pch=19)
+cc01a <- catchCurve(Freq~age,data=d01,ages2use=2:11)
+coef(cc01a)
+confint(cc01a)
+plot(cc01a)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("Mortality.Rmd",moreItems=c("knitr","showkey","seed"),topnotes="Nunavut 6-9-Aug-16")
+```

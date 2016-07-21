@@ -13,10 +13,8 @@ dWE1_13 <- filterD(dWE1,year==2013) %>%
   as.data.frame()
 
 ( tmp <- xtabs(~age+year,data=dWE1) )
-( ind <- row(tmp)-col(tmp) )
 
-d03 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==0))]),
-                  Freq=tmp[ind==0]) %>%
+d03 <- diags(tmp,which=0,incl.labels="row",val.name="Freq",label.name="age") %>%
   mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
   mutate(logfreq=log(Freq))
 plot(logfreq~age,data=d03,xlab="Age",ylab="Log Frequency",pch=19)
@@ -29,8 +27,7 @@ coef(cc03b)
 confint(cc03b)
 plot(cc03b)
 
-d01 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==2))]),
-                  Freq=tmp[ind==2]) %>%
+d01 <- diags(tmp,which=2,incl.labels="row",val.name="Freq",label.name="age") %>%
   mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
   mutate(logfreq=log(Freq))
 plot(logfreq~age,data=d01,xlab="Age",ylab="Log Frequency",pch=19)
@@ -40,4 +37,4 @@ confint(cc01a)
 plot(cc01a)
 
 
-# Script created at 2016-07-20 16:19:58
+# Script created at 2016-07-20 21:13:04

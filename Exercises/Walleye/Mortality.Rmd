@@ -39,10 +39,8 @@ dWE1_13 <- filterD(dWE1,year==2013) %>%
 2. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1.  Create a data.frame that contains fish from the 2003 year-class captured across many capture years.  Attempt to compute the annual mortality rate from these data.
 ```{r}
 ( tmp <- xtabs(~age+year,data=dWE1) )
-( ind <- row(tmp)-col(tmp) )
 
-d03 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==0))]),
-                  Freq=tmp[ind==0]) %>%
+d03 <- diags(tmp,which=0,incl.labels="row",val.name="Freq",label.name="age") %>%
   mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
   mutate(logfreq=log(Freq))
 plot(logfreq~age,data=d03,xlab="Age",ylab="Log Frequency",pch=19)
@@ -61,8 +59,7 @@ plot(cc03b)
 3. Repeat the previous questions but for another year-class with sufficient data.
 
 ```{r}
-d01 <- data.frame(age=as.numeric(rownames(tmp)[apply(ind,MARGIN=1,FUN=function(x) any(x==2))]),
-                  Freq=tmp[ind==2]) %>%
+d01 <- diags(tmp,which=2,incl.labels="row",val.name="Freq",label.name="age") %>%
   mutate(Freq=mapvalues(Freq,from=0,to=NA)) %>%
   mutate(logfreq=log(Freq))
 plot(logfreq~age,data=d01,xlab="Age",ylab="Log Frequency",pch=19)

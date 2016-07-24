@@ -25,7 +25,9 @@ LChip_LMB2 <- filterD(LChip_LMB,len>150)
 aov2 <- lm(len~fyear,data=LChip_LMB2)
 residPlot(aov2)
 leveneTest(aov2)
+
 anova(aov2)
+
 mc2 <- glht(aov2,mcp(fyear="Tukey"))
 summary(mc2)
 cld(mc2)
@@ -44,4 +46,4 @@ kruskal.test(len~fyear,data=LChip_LMB2)
 dunnTest(len~fyear,data=LChip_LMB2)
 
 
-# Script created at 2016-07-17 18:35:34
+# Script created at 2016-07-23 22:32:15

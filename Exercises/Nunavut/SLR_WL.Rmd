@@ -1,6 +1,5 @@
 ---
-title: "SLR Weight-Length Relation"
-subtitle: "Exercise - Nunavut"
+title: "SLR Weight-Length Relation - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

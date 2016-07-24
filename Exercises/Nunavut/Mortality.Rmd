@@ -1,6 +1,5 @@
 ---
-title: "Mortality (Catch Curves)"
-subtitle: "Exercise - Nunavut"
+title: "Mortality (Catch Curves) - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

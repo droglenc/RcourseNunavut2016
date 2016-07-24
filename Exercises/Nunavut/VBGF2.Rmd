@@ -1,6 +1,5 @@
 ---
-title: "Compare VBGFs"
-subtitle: "Exercise - Nunavut"
+title: "Compare VBGFs - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

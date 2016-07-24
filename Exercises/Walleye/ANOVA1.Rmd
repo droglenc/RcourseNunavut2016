@@ -1,6 +1,5 @@
 ---
-title: "One-Way ANOVA"
-subtitle: "Exercise - Walleye"
+title: "One-Way ANOVA - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -24,8 +23,6 @@ library(plotrix)
 ```
 
 ----
-
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
 1. Load the `WalleyeErie2.csv` file into a data.frame object, create a factor version of the `loc` variable, and determine if the mean weight of Walleye captured in 2014 differs among locations.  Also provide a summary graphic.  [*Note that you should consider performing the hypothesis test with log-transformed weights.*]
 ```{r}

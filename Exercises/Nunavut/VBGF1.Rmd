@@ -1,6 +1,5 @@
 ---
-title: "von Bertalanffy Growth Function"
-subtitle: "Exercise - Nunavut"
+title: "von Bertalanffy Growth Function - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

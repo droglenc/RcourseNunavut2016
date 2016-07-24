@@ -1,6 +1,5 @@
 ---
-title: "Summarization I"
-subtitle: "Exercise - Walleye"
+title: "Summarization I - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -22,8 +21,6 @@ library(dplyr)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
 1. Load the `WalleyeErie2.csv` file into a data.frame object, create factor versions of the `loc` and `year` variables, and answer the following questions.
 ```{r}
 dWE <- read.csv("WalleyeErie2.csv")
@@ -35,13 +32,11 @@ str(dWE)
 ( n_loc <- xtabs(~floc,data=dWE) )
 ```
     b. What percent of all fish collected were from each location? [*Show results as a table rounded to one decimal place and as a figure.*]
-    
 ```{r}
 p_loc <- prop.table(n_loc)*100
 round(p_loc,1)
 barplot(p_loc,xlab="Location Code",ylab="Percent of All Fish Sampled")
 ```
-
     c. Construct a table that shows the percentage (to one decimal) of females (and males) collected by year.
 ```{r}
 n_sexyr <- xtabs(~sex+year,data=dWE)
@@ -60,7 +55,6 @@ dWE_14_1 <- filterD(dWE,year==2014,loc==1)
 ```{r}
 hist(~tl,data=dWE_14_1,w=10,xlab="Total Length (mm)",ylim=c(0,100))
 ```
-
     b. Summarize (numerically) the length measurements.
 ```{r}
 Summarize(~tl,data=dWE_14_1,digits=1)
@@ -69,17 +63,26 @@ Summarize(~tl,data=dWE_14_1,digits=1)
 ```{r}
 hist(~age,data=dWE_14_1,w=1,xlab="Age")
 ```
-
     d. Summarize (numerically) the age estimates.
 ```{r}
 Summarize(~age,data=dWE_14_1,digits=1)
 ```
-    e. Examine the length-age relationship.
+    e. Construct a table from which you can easily find the percentage of fish older than age-8.
+```{r}
+tp_age <- prop.table(xtabs(~age,dWE_14_1))*100
+round(rcumsum(tp_age),1)
+round(rcumsum(tp_age),1)["8"]
+```
+    f. Construct a table from which you can easily find the percentage of fish younger than age-5.
+```{r}
+round(cumsum(tp_age),1)
+round(cumsum(tp_age),1)["5"]
+```
+    g. Examine the length-age relationship.
 ```{r}
 plot(tl~age,data=dWE_14_1,pch=19,col=col2rgbt("black",1/10))
 ```
-
-    f. Examine (graphically and numerically) the log-log transformed weight-length relationship.
+    h. Examine (graphically and numerically) the log-log transformed weight-length relationship.
 ```{r}
 dWE_14_1 <- mutate(dWE_14_1,logtl=log(tl),logw=log(w))
 plot(logw~logtl,data=dWE_14_1,pch=19,col=col2rgbt("black",1/10))

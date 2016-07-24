@@ -1,6 +1,5 @@
 ---
-title: "Summarization I"
-subtitle: "Exercise - Nunavut"
+title: "Summarization I - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -23,8 +22,6 @@ library(readxl)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
 1. Load the `PG008_original.xlsx` file into a data.frame object and answer the following questions.
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
@@ -36,13 +33,11 @@ str(dNU)
 ( n_yr <- xtabs(~fyear,data=dNU) )
 ```
     b. What percent of all fish collected were from each year? [*Show results as a table rounded to one decimal place and as a figure.*]
-    
 ```{r}
 p_yr <- prop.table(n_yr)*100
 round(p_yr,1)
 barplot(p_yr,xlab="Year",ylab="Percent of All Fish Sampled")
 ```
-
     c. Construct a table that shows the percentage (to one decimal) of females (and males) collected by year.
 ```{r}
 n_sexyr <- xtabs(~sex+fyear,data=dNU)
@@ -59,31 +54,41 @@ dNU_13 <- filterD(dNU,year==2013)
 ```
     a. Construct a length frequency graphic.  [*Experiment with different bin widths*]
 ```{r}
-hist(~FL,data=dNU_13,w=20,xlab="Fork Length (mm)")
+hist(~fl,data=dNU_13,w=20,xlab="Fork Length (mm)")
 ```
-
     b. Summarize (numerically) the length measurements.
 ```{r}
-Summarize(~FL,data=dNU_13,digits=1)
+Summarize(~fl,data=dNU_13,digits=1)
 ```
-    c. Summarize the weight measurements.
+    c. Construct a table from which you can easily find the percentage of fish longer than 450 mm.
+```{r}
+dNU_13 <- mutate(dNU_13,lcat50=lencat(fl,w=50))
+tp_lcat50 <- prop.table(xtabs(~lcat50,dNU_13))*100
+round(rcumsum(tp_lcat50),1)
+round(rcumsum(tp_lcat50),1)["450"]
+```
+    d. Construct a table from which you can easily find the percentage of fish shorter than 700 mm.
+```{r}
+round(cumsum(tp_lcat50),1)
+round(cumsum(tp_lcat50),1)["700"]
+```
+    e. Summarize the weight measurements.
 ```{r}
 hist(~wt,data=dNU_13,w=100,xlab="Weight (grams)")
 Summarize(~wt,data=dNU_13,digits=1)
 ```
-    e. Examine the weight-length relationship.
+    f. Examine the weight-length relationship.
 ```{r}
-plot(wt~FL,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
+plot(wt~fl,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
 ```
-
-    f. Examine (graphically and numerically) the log-log transformed weight-length relationship.
+    g. Examine (graphically and numerically) the log-log transformed weight-length relationship.
 ```{r}
-dNU_13 <- mutate(dNU_13,logfl=log(FL),logwt=log(wt))
+dNU_13 <- mutate(dNU_13,logfl=log(fl),logwt=log(wt))
 plot(logwt~logfl,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
 with(dNU_13,cor(logwt,logfl))
 ```
 
-2. Isolate Arctic Charr captured from a single year where age was estimated for a large number of fish.  [*Hint: Make a frequency table of `age` by `year`.*]  Use these data to answer the questions below.
+3. Isolate Arctic Charr captured from a single year where age was estimated for a large number of fish.  [*Hint: Make a frequency table of `age` by `year`.*]  Use these data to answer the questions below.
 ```{r}
 xtabs(~age+fyear,data=dNU)
 dNU_10 <- filterD(dNU,year==2010)
@@ -93,9 +98,20 @@ dNU_10 <- filterD(dNU,year==2010)
 hist(~age,data=dNU_10,w=1,xlab="Age (years)")
 Summarize(~age,data=dNU_10,digits=1)
 ```
-    b. Examine the length-age relationship.
+    b. Construct a table from which you can easily find the percentage of fish older than age-8.
 ```{r}
-plot(FL~age,data=dNU_10,pch=19,col=col2rgbt("black",1/10))
+tp_age <- prop.table(xtabs(~age,dNU_10))*100
+round(rcumsum(tp_age),1)
+round(rcumsum(tp_age),1)["8"]
+```
+    c. Construct a table from which you can easily find the percentage of fish younger than age-15.
+```{r}
+round(cumsum(tp_age),1)
+round(cumsum(tp_age),1)["15"]
+```
+    d. Examine the length-age relationship.
+```{r}
+plot(fl~age,data=dNU_10,pch=19,col=col2rgbt("black",1/10))
 ```
 
 ----

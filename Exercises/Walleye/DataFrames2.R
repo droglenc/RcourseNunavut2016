@@ -21,6 +21,8 @@ levels(dWE$fyear)
 
 tmp <- filterD(dWE,sex=="male")
 levels(tmp$sex)
+tmp <- filterD(dWE,sex!="female")
+levels(tmp$sex)
 
 tmp <- filterD(dWE,year %in% c(2005,2009,2013))
 levels(tmp$fyear)
@@ -35,4 +37,4 @@ headtail(tmp)
 ( tmp <- filterD(dWE,sex=="male",!is.na(age)) )
 
 
-# Script created at 2016-07-17 13:03:17
+# Script created at 2016-07-23 21:08:29

@@ -1,6 +1,5 @@
 ---
-title: "One-Way ANOVA"
-subtitle: "Exercise - Nunavut"
+title: "One-Way ANOVA - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -26,15 +25,13 @@ library(plotrix)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
-1. Load the `PG008_original.xlsx` file into a data.frame object, create a factor version of the `year` variable, and determine if the mean fork length of fish sampled from the "Seawater" `water.type` differs among years.  [*Note, be careful about the inconsistent use of levels in `water.type`*.]
+1. Load the `PG008_original.xlsx` file into a data.frame object, create a factor version of the `year` variable, and determine if the mean fork length of fish sampled from **"Seawater"** differs among years.  [*Note, be careful about the inconsistent use of levels in `water.type`*.]
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
 dNU_SW <- filterD(dNU,water.type %in% c("Seawater","seawater"))
 ```
 ```{r fig.width=6}
-aov1 <- lm(FL~fyear,data=dNU_SW)
+aov1 <- lm(fl~fyear,data=dNU_SW)
 residPlot(aov1)
 leveneTest(aov1)
 anova(aov1)
@@ -43,7 +40,7 @@ summary(mc1)
 cld(mc1)
 ```
 ```{r}
-sum <- Summarize(FL~fyear,data=dNU_SW)
+sum <- Summarize(fl~fyear,data=dNU_SW)
 sum <- select(sum,fyear,n,mean,sd)
 sum <- mutate(sum,year=fact2num(fyear),se=sd/sqrt(n),
                    LCI=mean-qt(0.975,df=n-1)*se,UCI=mean+qt(0.975,df=n-1)*se)
@@ -57,7 +54,7 @@ with(sum,text(year,UCI,c("a","b","b","b","b"),pos=3))
 dNU_FW <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),age>=15,age<=20)
 ```
 ```{r fig.width=6}
-aov2 <- lm(FL~fyear,data=dNU_FW)
+aov2 <- lm(fl~fyear,data=dNU_FW)
 residPlot(aov2)
 leveneTest(aov2)
 anova(aov2)
@@ -66,7 +63,7 @@ summary(mc2)
 cld(mc2)
 ```
 ```{r}
-sum <- Summarize(FL~fyear,data=dNU_FW)
+sum <- Summarize(fl~fyear,data=dNU_FW)
 sum <- select(sum,fyear,n,mean,sd)
 sum <- mutate(sum,year=fact2num(fyear),se=sd/sqrt(n),
                    LCI=mean-qt(0.975,df=n-1)*se,UCI=mean+qt(0.975,df=n-1)*se)

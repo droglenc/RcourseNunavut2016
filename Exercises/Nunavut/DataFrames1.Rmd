@@ -1,6 +1,5 @@
 ---
-title: "data.frames I"
-subtitle: "Exercise - Nunavut"
+title: "data.frames I - Nunavut Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -22,8 +21,6 @@ library(readxl)
 ```
 
 ----
-
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
 1. Create a "metadata" CSV file that corresponds to the `PG008_original.xlsx` data file.  [Note that the variables in this file are *slightly* different than the variables in the data file used in the handout.  I suggest you start with the metadata file used in the handout and modify it to match the variales in the `PG008_original.xlsx` Excel file.]  Save this file in the same directory as the corresponding data file.
 
@@ -50,6 +47,18 @@ class(dNU[,5])
 ```{r}
 names(dNU)[2]
 class(dNU[,2])
+```
+    e. Demonstrate how to access all of the fork length (`fl`) measurements.
+```{r}
+dNU$fl
+```
+    f. Demonstrate how to see the fifth fork length measurement.
+```{r}
+dNU$fl[5]
+```
+    g. Demonstrate how to see the fork length measurements for all fish captued in 2002.
+```{r}
+dNU$fl[dNU$year==2002]
 ```
 
 ----

@@ -1,6 +1,5 @@
 ---
-title: "DVR Weight-Length Relation"
-subtitle: "Exercise - Walleye"
+title: "DVR Weight-Length Relation - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

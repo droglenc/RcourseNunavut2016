@@ -1,6 +1,5 @@
 ---
-title: "Very Quick R Basics"
-subtitle: "Exercise"
+title: "Very Quick R Basics - Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -51,43 +50,55 @@ ct <- c(87,54,12,98,45,5,78)
 ft <- c(3,3,2,5,2,2,4)
 ```
 
-7. Use your `ct` and `ft` vectors to compute a vector called `cpe` that contains the CPE (number of fish per net).
+7. The `ct` and `ft` represent daily samples that began on a Monday.  Enter the days of the week into a vector called `dow`.
+```{r}
+dow <- c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
+```
+
+8. Use your `ct` and `ft` vectors to compute a vector called `cpe` that contains the CPE (number of fish per net).
 ```{r}
 ( cpe <- ct/ft )
 ```
 
-8. Find the mean CPE.
+9. Find the mean CPE.
 ```{r}
 mean(cpe)
 ```
 
-9. Use R code to find the third CPE.
+10. Use R code to find the third CPE.
 ```{r}
 cpe[3]
 ```
 
-10. Use R code to simultaneously find the third and fifth CPEs.
+11. Use R code to simultaneously find the third and fifth CPEs.
 ```{r}
 cpe[c(3,5)]
 ```
 
-11. Use R code to eliminate the seventh CPE (but retain the other six CPEs).
+12. Use R code to eliminate the seventh CPE (but retain the other six CPEs).
 ```{r}
 cpe[-7]
 ```
 
-12. Use R code to find the CPEs for ONLY the days when two nets were fished.
+13. Use R code to find the CPEs for ONLY the days when two nets were fished.
 ```{r}
 cpe[ft==2]
 ```
 
-13. Find the mean CPE for ONLY those days when three or more nets were fished.
+14. Find the mean CPE for ONLY those days when three or more nets were fished.
 ```{r}
 cpe.gt3 <- cpe[ft>=3]
 mean(cpe.gt3)
 ```
 
-14. Save your R script, close RStudio, open RStudio, and re-run your script.
+15. Find the mean and standard deviation of CPE for ONLY weekdays.
+```{r}
+cpe.wd <- cpe[!dow %in% c("Sat","Sun")]
+mean(cpe.wd)
+sd(cpe.wd)
+```
+
+16. Save your R script, close RStudio, open RStudio, and re-run your script.
 
 ```{r echo=FALSE, results="hide", message=FALSE}
 purl2("Basics.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")

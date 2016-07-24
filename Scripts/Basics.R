@@ -13,6 +13,7 @@ sqrt(17)
 dat <- c(3,6,8,3,5,6,2,7,6,8,2,10)
 mean(dat)
 mean(dat,trim=0.1)
+?mean
 
 mr1 <- mrClosed(M=346,n=184,m=49,method="Chapman")
 mr1
@@ -38,4 +39,4 @@ maxDepth<7
 numSpec[maxDepth<7]
 
 
-# Script created at 2016-07-17 10:07:44
+# Script created at 2016-07-23 19:38:34

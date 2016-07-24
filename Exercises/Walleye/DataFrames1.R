@@ -15,5 +15,11 @@ class(dWE[,5])
 names(dWE)[2]
 class(dWE[,2])
 
+dWE$tl
 
-# Script created at 2016-07-07 15:34:27
+dWE$tl[5]
+
+dWE$tl[dWE$year==2003]
+
+
+# Script created at 2016-07-23 21:08:09

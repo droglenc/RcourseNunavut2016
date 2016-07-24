@@ -1,6 +1,5 @@
 ---
-title: "Compare VBGFs"
-subtitle: "Exercise - Walleye"
+title: "Compare VBGFs - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

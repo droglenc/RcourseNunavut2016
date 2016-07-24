@@ -16,23 +16,32 @@ source("../knitr_setup.R")
 
 ----
 
+\vspace{-30pt}
 # Preliminaries
+\vspace{-12pt}
 ## Load Necessary Packages
+\vspace{-12pt}
 ```{r results='hide', warning=FALSE, message=FALSE}
 library(FSA)    # for headtail()
 library(readxl) # for read_excel()
 library(dplyr)  # for mutate()
 ```
 
+
+\vspace{-16pt}
 ## Set Working Directory
+\vspace{-12pt}
 ```{r eval=FALSE}
 # Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 ```
+\vspace{-18pt}
 
 ----
 
+\vspace{-24pt}
 # Load Data from External CSV File
+\vspace{-18pt}
 ```{r R.options=list(max.print=72)}
 dSC <- read.csv("SawyerCo_reduced.csv")
 str(dSC)
@@ -41,6 +50,8 @@ dSC$len
 dSC$len[1]
 dSC$len[c(1,3,5)]
 ```
+
+\vspace{-24pt}
 
 ----
 

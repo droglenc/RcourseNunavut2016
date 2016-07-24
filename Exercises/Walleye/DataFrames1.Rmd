@@ -1,6 +1,5 @@
 ---
-title: "data.frames I"
-subtitle: "Exercise - Walleye"
+title: "data.frames I - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -20,8 +19,6 @@ library(FSA)
 ```
 
 ----
-
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
 
 1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
 ```{r}
@@ -45,6 +42,18 @@ class(dWE[,5])
 ```{r}
 names(dWE)[2]
 class(dWE[,2])
+```
+    e. Demonstrate how to access all of the total length (`tl`) measurements.
+```{r}
+dWE$tl
+```
+    f. Demonstrate how to see the fifth total length measurement.
+```{r}
+dWE$tl[5]
+```
+    g. Demonstrate how to see the total length measurements for all fish captued in 2003.
+```{r}
+dWE$tl[dWE$year==2003]
 ```
 
 ----

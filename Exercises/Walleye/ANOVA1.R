@@ -53,4 +53,4 @@ with(sum,plotCI(year,mean,li=LCI,ui=UCI,pch=19,ylim=c(290,390),xlim=c(2003.8,201
 with(sum,text(year,UCI,c("a","b","b","g","d","c","c","d","f","de","ef"),pos=3))
 
 
-# Script created at 2016-07-17 19:19:17
+# Script created at 2016-07-23 22:32:04

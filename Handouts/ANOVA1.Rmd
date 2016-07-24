@@ -46,7 +46,11 @@ hist(len~fyear,data=LChip_LMB,same.ylim=FALSE)
 
 ----
 
+\vspace{-12pt}
 # 1-Way ANOVA
+\vspace{-12pt}
+## Assumption Checking
+\vspace{-12pt}
 ```{r fig.width=6}
 aov1 <- lm(len~fyear,data=LChip_LMB)
 residPlot(aov1)
@@ -58,12 +62,24 @@ LChip_LMB2 <- filterD(LChip_LMB,len>150)
 aov2 <- lm(len~fyear,data=LChip_LMB2)
 residPlot(aov2)
 leveneTest(aov2)
+```
+
+\vspace{24pt}
+## ANOVA Table and Test
+```{r}
 anova(aov2)
+```
+
+\newpage
+## Multiple Comparisons
+```{r}
 mc2 <- glht(aov2,mcp(fyear="Tukey"))
 summary(mc2)
 cld(mc2)
 ```
 
+\vspace{24pt}
+## Summary Graphic
 ```{r}
 sum_LMB2 <- Summarize(len~fyear,data=LChip_LMB2)
 sum_LMB2 <- select(sum_LMB2,fyear,n,mean,sd)
@@ -78,13 +94,13 @@ axis(1,c("2011","2013"))
 
 ----
 
-\newpage
 # Kruskal-Wallis Test
 ```{r}
 kruskal.test(len~fyear,data=LChip_LMB2)
 dunnTest(len~fyear,data=LChip_LMB2)
 ```
 
+----
 
 ```{r echo=FALSE, results="hide", message=FALSE}
 purl2("ANOVA1.Rmd",moreItems="knitr",out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")

@@ -1,6 +1,5 @@
 ---
-title: "von Bertalanffy Growth Function"
-subtitle: "Exercise - Walleye"
+title: "von Bertalanffy Growth Function - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

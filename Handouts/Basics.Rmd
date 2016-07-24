@@ -34,16 +34,18 @@ res*2
 
 # Functions
 ## Names and Arguments
-```{r}
+```{r message=FALSE}
 sqrt(17)
 ( res <- sqrt(17) )
 dat <- c(3,6,8,3,5,6,2,7,6,8,2,10)
 mean(dat)
 mean(dat,trim=0.1)
+?mean
 ```
 
 \newpage
 ## Constructor and Extractor Functions
+\vspace{-12pt}
 ```{r eval=-2}
 mr1 <- mrClosed(M=346,n=184,m=49,method="Chapman")
 mr1
@@ -54,8 +56,11 @@ confint(mr1,verbose=TRUE)
 
 ----
 
+\vspace{-12pt}
 # Vectors
+\vspace{-12pt}
 ## Data Types
+\vspace{-12pt}
 ```{r}
 ( lake <- c("Deep","Long","Star","Twin") )
 ( numSpec <- c(4,8,7,3) )
@@ -64,6 +69,7 @@ confint(mr1,verbose=TRUE)
 ```
 
 ## Selecting Individuals (by Position)
+\vspace{-12pt}
 ```{r error=TRUE}
 lake[1]
 lake[2]

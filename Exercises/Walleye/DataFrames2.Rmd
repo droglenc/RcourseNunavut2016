@@ -1,6 +1,5 @@
 ---
-title: "data.frames II"
-subtitle: "Exercise - Walleye"
+title: "data.frames II - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
@@ -22,61 +21,62 @@ library(dplyr)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.  For the filtering/subsetting questions, make sure to provide some evidence to support that your filter/subset was successful.
-
-1. Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.
+Load the `WalleyeErie2.csv` file into a data.frame object and answer the following questions.  *Make sure to provide some evidence to support that your filter/subset was successful.*
 ```{r message=FALSE, warning=FALSE}
 dWE <- read.csv("WalleyeErie2.csv")
 str(dWE)
 ```
-    a. For this application, remove the `setID` and `grid` variables.
+1. Remove the `setID` and `grid` variables.
 ```{r}
 dWE <- select(dWE,-setID,-grid)
 headtail(dWE)
 ```
-    b. Add variables that convert the `tl` measurements from mm to inches and the `w` values from grams to pounds.
+2. Add variables that convert the `tl` measurements from mm to inches and the `w` values from grams to pounds.
 ```{r}
 dWE <- mutate(dWE,tl.in=tl/25.4,w.lbs=w/454)
 headtail(dWE)
 ```
-    c. Add a new variable that records the sex of the fish as `M` for "male" and `F` for "female."
+3. Add a new variable that records the sex of the fish as `M` for "male" and `F` for "female."
 ```{r}
 dWE <- mutate(dWE,sex2=mapvalues(sex,from=c("male","female"),to=c("M","F")))
 headtail(dWE)
 ```
-    d. Add a new variable that contains the capture year as a factor-type variable.  How many levels of this variable are present in the data.frame?
+4. Add a new variable that contains the capture year as a factor-type variable.  How many levels of this variable are present in the data.frame?  What are they?
 ```{r}
 dWE <- mutate(dWE,fyear=factor(year))
 headtail(dWE)
 levels(dWE$fyear)
 ```
-    e. Create a new data.frame that contains only male fish.  [*Show two ways to create this data.frame.*]
+5. Create a new data.frame that contains only male fish.  [*Show two ways to create this data.frame.*]
 ```{r}
 tmp <- filterD(dWE,sex=="male")
 levels(tmp$sex)
+tmp <- filterD(dWE,sex!="female")
+levels(tmp$sex)
 ```
-    f. Create a new data.frame that contains all fish captured in 2005, 2009, and 2013.
+6. Create a new data.frame that contains all fish captured in 2005, 2009, and 2013.
 ```{r}
 tmp <- filterD(dWE,year %in% c(2005,2009,2013))
 levels(tmp$fyear)
 ```
-    g. Create a new data.frame that contains only females captured in 2010.
+7. Create a new data.frame that contains only female fish captured in 2010.
 ```{r}
 tmp <- filterD(dWE,sex=="female",year==2010)
 headtail(tmp)
 ```
-    h. Create a new data.frame that contains only female fish larger than 750 mm.
+8. Create a new data.frame that contains only female fish larger than 750 mm.
 ```{r}
 ( tmp <- filterD(dWE,sex=="female",tl>750) )
 ```
-    i. Create a new data.frame that contains only males captured in 2013 for which a weight was NOT recorded.
+9. Create a new data.frame that contains only males captured in 2013 for which a weight was NOT recorded.
 ```{r}
 ( tmp <- filterD(dWE,sex=="male",year==2013,is.na(w)) )
 ```
-    j. Create a new data.frame that contains only males for which an age WAS recorded.
+10. Create a new data.frame that contains only males for which an age WAS recorded.
 ```{r warning=showkey}
 ( tmp <- filterD(dWE,sex=="male",!is.na(age)) )
 ```
+11. [*Time permitting*] Create new data.frames of your choosing.
 
 ----
 

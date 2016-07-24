@@ -1,6 +1,5 @@
 ---
-title: "SLR Weight-Length Relation"
-subtitle: "Exercise - Walleye"
+title: "SLR Weight-Length Relation - Walleye Exercise"
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}

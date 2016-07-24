@@ -21,8 +21,6 @@ library(dplyr)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
 1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
 ```{r}
 dWE <- read.csv("WalleyeErie2.csv")
@@ -57,17 +55,17 @@ exp(predW)
     e. Provide summary graphics of the weight-length relationship regression on two scales (i.e., two graphics).
 
 ```{r fig.show=ifelse(showkey,"hold","hide")}
+clr <- col2rgbt("black",1/10)
 Summarize(~logtl,data=dWE_13,digits=1)
 logL <- seq(5.65,6.55,length.out=199)
 logW <- predict(slr2,data.frame(logtl=logL),interval="prediction")
-plot(logw~logtl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),
-     xlab="log Length (mm)",ylab="log Weight (g)")
+plot(logw~logtl,data=dWE_13,pch=19,col=clr,xlab="log Total Length (mm)",ylab="log Weight (g)")
 lines(logL,logW[,"fit"],lwd=2)
 lines(logL,logW[,"lwr"],lwd=2,lty=2)
 lines(logL,logW[,"upr"],lwd=2,lty=2)
 L <- exp(logL)
 W <- exp(logW)
-plot(w~tl,data=dWE_13,pch=19,col=col2rgbt("black",1/10),xlab="Length (mm)",ylab="Weight (g)")
+plot(w~tl,data=dWE_13,pch=19,col=clr,xlab="Total Length (mm)",ylab="Weight (g)")
 lines(L,W[,"fit"],lwd=2)
 lines(L,W[,"lwr"],lwd=2,lty=2)
 lines(L,W[,"upr"],lwd=2,lty=2)

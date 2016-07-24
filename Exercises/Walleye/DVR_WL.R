@@ -79,4 +79,4 @@ lines(logL3,logW3[,"upr"],lwd=2,lty=2,col=clr1[3])
 lwCompPreds(dvr3,qlens.dec=0)
 
 
-# Script created at 2016-07-18 08:52:11
+# Script created at 2016-07-24 11:53:02

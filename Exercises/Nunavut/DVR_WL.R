@@ -5,13 +5,13 @@ library(dplyr)
 library(readxl)
 
 source("PG008_readdata.R")
-dNU_FW <- mutate(dNU,logwt=log(wt),logfl=log(FL))
+dNU_FW <- mutate(dNU,logwt=log(wt),logfl=log(fl))
 dNU_FW <- filterD(dNU_FW,!is.na(wt),water.type %in% c("freshwater","Freshwater"))
 dNU_FW10 <- filterD(dNU_FW,year==2010,logfl>4.7,sex!="U")
 
 clr1 <- c("black","blue")
 clr2 <- col2rgbt(clr1,1/3)
-plot(wt~FL,data=dNU_FW10,pch=19,col=clr2[sex],xlab="Fork Length (mm)",ylab="Weight (g)")
+plot(wt~fl,data=dNU_FW10,pch=19,col=clr2[sex],xlab="Fork Length (mm)",ylab="Weight (g)")
 plot(logwt~logfl,data=dNU_FW10,pch=19,col=clr2[sex],xlab="log Fork Length (mm)",ylab="log Weight (g)")
 
 dvr1 <- lm(logwt~logfl*sex,data=dNU_FW10)
@@ -51,4 +51,4 @@ lines(logL2,logW2[,"upr"],lwd=2,lty=2,col=clr1[2])
 lwCompPreds(dvr3,qlens.dec=0)
 
 
-# Script created at 2016-07-18 10:19:42
+# Script created at 2016-07-24 11:54:47

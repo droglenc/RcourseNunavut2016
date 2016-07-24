@@ -21,8 +21,6 @@ library(dplyr)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
 1. Load the `WalleyeErie2.csv` file into a data.frame object and restrict the data to Walleye captured from location 1 in 2013.  Use these data for the following questions.
 ```{r}
 dWE <- read.csv("WalleyeErie2.csv")

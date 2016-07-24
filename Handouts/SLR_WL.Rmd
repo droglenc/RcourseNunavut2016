@@ -34,25 +34,30 @@ Sturg <- filterD(dSC,waterbody=="CHIPPEWA RIVER",species=="Lake Sturgeon",!is.na
 
 ## Quick Summaries
 ```{r fig.show='hold'}
-plot(weight~len,data=Sturg,pch=19,col=col2rgbt("black",1/3),
-     xlab="Length (mm)",ylab="Weight (g)")           # Left
-plot(logwt~loglen,data=Sturg,pch=19,col=col2rgbt("black",1/3),
-     xlab="log Length (mm)",ylab="log Weight (g)")   # Right
+clr <- col2rgbt("black",1/3)
+plot(weight~len,data=Sturg,pch=19,col=clr,xlab="Total Length (mm)",ylab="Weight (g)")           # Left
+plot(logwt~loglen,data=Sturg,pch=19,col=clr,xlab="log Total Length (mm)",ylab="log Weight (g)") # Right
 ```
 
 ----
 
 # Simple Linear Regression
-## Fitting the Model
+## Checking Assumptions
 ```{r fig.width=6}
 slr1 <- lm(weight~len,data=Sturg)
 residPlot(slr1)
 slr2 <- lm(logwt~loglen,data=Sturg)
 residPlot(slr2)
+```
+
+\newpage
+## Model Results
+```{r}
 summary(slr2)
 cbind(ests=coef(slr2),confint(slr2))
 ```
 
+\vspace{30pt}
 ## Making Predictions
 ```{r}
 ( p1 <- predict(slr2,data.frame(loglen=log(500)),interval="confidence") )
@@ -61,15 +66,14 @@ exp(p1)
 exp(p2)
 ```
 
+\newpage
 ## Summary Plot
 ```{r}
-Summarize(~loglen,data=Sturg,digits=1)
-logL <- seq(6.15,7.35,length.out=199)
-logW <- predict(slr2,data.frame(loglen=logL),interval="prediction")
-L <- exp(logL)
-W <- exp(logW)
+Summarize(~len,data=Sturg,digits=1)
+L <- seq(495,1494,length.out=199)
+W <- exp(predict(slr2,data.frame(loglen=log(L)),interval="prediction"))
 headtail(W)
-plot(weight~len,data=Sturg,pch=19,col=col2rgbt("black",1/3),xlab="Length (mm)",ylab="Weight (g)")
+plot(weight~len,data=Sturg,pch=19,col=clr,xlab="Total Length (mm)",ylab="Weight (g)")
 lines(L,W[,"fit"],lwd=2)
 lines(L,W[,"lwr"],lwd=2,lty=2)
 lines(L,W[,"upr"],lwd=2,lty=2)

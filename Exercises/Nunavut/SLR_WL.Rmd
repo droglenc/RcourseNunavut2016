@@ -22,13 +22,11 @@ library(readxl)
 
 ----
 
-Answer the following questions by creating an R script and iteratively running the code in RStudio.
-
 1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data to only those fish captured in **freshwater** in **2010**.  Use these data for the following questions.
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
 dNU_FW10 <- filterD(dNU,year==2010,water.type %in% c("Freshwater","freshwater"))
-dNU_FW10 <- mutate(dNU_FW10,logwt=log(wt),logfl=log(FL))
+dNU_FW10 <- mutate(dNU_FW10,logwt=log(wt),logfl=log(fl))
 ## Outlier present at smallest length
 dNU_FW10 <- filterD(dNU_FW10,logfl>4.7)
 ```
@@ -60,17 +58,17 @@ exp(predW)
     e. Provide summary graphics of the weight-length relationship regression on two scales (i.e., two graphics).
 
 ```{r fig.show=ifelse(showkey,"hold","hide")}
+clr <- col2rgbt("black",1/10)
 Summarize(~logfl,data=dNU_FW10,digits=1)
 logL <- seq(4.85,6.85,length.out=199)
 logW <- predict(slr1,data.frame(logfl=logL),interval="prediction")
-plot(logwt~logfl,data=dNU_FW10,pch=19,col=col2rgbt("black",1/10),
-     xlab="log Length (mm)",ylab="log Weight (g)")
+plot(logwt~logfl,data=dNU_FW10,pch=19,col=clr,xlab="log Fork Length (mm)",ylab="log Weight (g)")
 lines(logL,logW[,"fit"],lwd=2)
 lines(logL,logW[,"lwr"],lwd=2,lty=2)
 lines(logL,logW[,"upr"],lwd=2,lty=2)
 L <- exp(logL)
 W <- exp(logW)
-plot(wt~FL,data=dNU_FW10,pch=19,col=col2rgbt("black",1/10),xlab="Length (mm)",ylab="Weight (g)")
+plot(wt~fl,data=dNU_FW10,pch=19,col=clr,xlab="Fork Length (mm)",ylab="Weight (g)")
 lines(L,W[,"fit"],lwd=2)
 lines(L,W[,"lwr"],lwd=2,lty=2)
 lines(L,W[,"upr"],lwd=2,lty=2)

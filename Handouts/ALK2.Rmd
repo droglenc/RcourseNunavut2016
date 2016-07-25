@@ -1,0 +1,61 @@
+---
+title: "Age-Length Key Application"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Age-Length Key Application}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+source("../knitr_setup.R")
+```
+
+----
+
+# Preliminaries
+\vspace{-12pt}
+## Source the Previous Script
+\vspace{-12pt}
+```{r results='hide', fig.show='hide', message=FALSE, warning=FALSE}
+# Appropriately set the working directory before this
+# This also ran library(FSA) which also provides alkIndivAge(), Summarize(), hist()
+source("../Scripts/ALK1.R")
+```
+```{r}
+ls()
+headtail(sp.len)
+```
+
+# Apply ALK using Isermann-Knight Method
+\vspace{-12pt}
+```{r}
+sp.len.mod <- alkIndivAge(ALK.obs,age~tl,data=sp.len)
+headtail(sp.len.mod)
+sp.comb <- rbind(sp.age,sp.len.mod)
+str(sp.comb)
+```
+
+# Summarize Final Results
+\vspace{-12pt}
+```{r}
+( agefreq <- xtabs(~age,data=sp.comb) )
+round(prop.table(agefreq)*100,1)
+```
+```{r}
+hist(~age,data=sp.comb,w=1,xlab="Age (yrs)")
+```
+```{r fig.show='hold'}
+( sp.sum <- Summarize(tl~age,data=sp.comb,digits=2) )
+plot(tl~age,data=sp.comb,ylab=lblTL,xlab="Age (yrs)",pch=19,col=col2rgbt("black",0.1))
+lines(mean~fact2num(age),data=sp.sum,col="blue",lwd=2)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ALK2.Rmd",moreItems="knitr",out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

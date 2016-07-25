@@ -1,0 +1,81 @@
+---
+title: "Age-Length Key Construction"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{Age-Length Key Construction}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide'}
+source("../knitr_setup.R")
+```
+
+----
+
+# Preliminaries
+\vspace{-12pt}
+## Load Necessary Packages
+\vspace{-12pt}
+```{r results='hide', warning=FALSE, message=FALSE}
+library(FSA)      # for filterD(), hist(), Summarize(), dunnTest()
+library(FSAdata)  # for SpotVA2 data
+library(dplyr)    # for mutate()
+library(nnet)     # for multinom()
+```
+
+## Load and Prepare Data
+\vspace{-12pt}
+```{r}
+data(SpotVA2)
+headtail(SpotVA2)
+sp.len <- filter(SpotVA2,is.na(age))
+headtail(sp.len)
+sp.age <- filter(SpotVA2,!is.na(age))
+headtail(sp.age)
+sp.age.mod <- mutate(sp.age,lcat=lencat(tl,w=1))
+headtail(sp.age.mod)
+```
+
+# Observed Age-Length Key
+\vspace{-12pt}
+```{r}
+( raw <- xtabs(~lcat+age,data=sp.age.mod) )
+( ALK.obs <- prop.table(raw,margin=1) )
+```
+
+# Smoothed Age-Length Key
+\vspace{-12pt}
+```{r}
+mlr <- multinom(age~lcat,data=sp.age.mod,maxit=500)
+lens <- seq(6,13,1)
+ALK.sm <- predict(mlr,data.frame(lcat=lens),type="probs")
+row.names(ALK.sm) <- lens
+round(ALK.sm,3)
+```
+
+# Visualizing an Age-Length Key
+```{r fig.show='hold', message=FALSE}
+lblTL <- "Total Length (cm)"
+alkPlot(ALK.obs,xlab=lblTL)
+alkPlot(ALK.sm,xlab=lblTL)
+```
+```{r fig.show='hold'}
+alkPlot(ALK.sm,pal="gray",showLegend=TRUE,xlab=lblTL)
+alkPlot(ALK.sm,type="area",pal="gray",showLegend=TRUE,xlab=lblTL)
+```
+
+\newpage
+```{r fig.show='hold'}
+alkPlot(ALK.sm,type="lines",pal="gray",xlab=lblTL)
+alkPlot(ALK.sm,type="bubble",xlab=lblTL)
+```
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ALK1.Rmd",moreItems="knitr",out.dir="../Scripts",topnotes="Nunavut 6-9-Aug-16")
+```

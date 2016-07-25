@@ -1,0 +1,106 @@
+---
+title: "ALK Construction - Exercise"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{ALK Construction Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+source("../knitr_setup.R")
+showkey <- FALSE
+opts_chunk$set(echo=showkey,
+               results=ifelse(showkey,"markup","hide"),
+               fig.show=ifelse(showkey,"asis","hide"))
+```
+```{r message=FALSE, warning=FALSE}
+library(FSA)
+library(FSAdata)
+library(dplyr)
+library(nnet)
+```
+
+[Wolfert (1980)](https://pubs.er.usgs.gov/publication/1000461) measured the total length (TL) of 1288 [Rock Bass](https://en.wikipedia.org/wiki/Rock_bass) (*Ambloplites rupestris*) from Eastern [Lake Ontario](https://en.wikipedia.org/wiki/Lake_Ontario) in the late 1970s.  In addition, [scales](https://en.wikipedia.org/wiki/Fish_scale) were removed for age estimation from as many as 10 specimens from each 10 mm length interval.  All data can be obtained from `data(RockBassLO2)` from the `FSAdata` package. [*Note that the filename contains an "oh" not a "zero."*].
+
+1. Separate the observed data into age- and length-samples.
+    a. How many fish are in each sample?
+```{r}
+data(RockBassLO2)
+rb.len <- filterD(RockBassLO2,is.na(age))
+nrow(rb.len)
+rb.age <- filterD(RockBassLO2,!is.na(age))
+nrow(rb.age)
+```
+
+2. Add a variable to the age-sample that contains the 10 mm TL categories.
+```{r}
+rb.age.mod <- mutate(rb.age,lcat10=lencat(tl,w=10))
+```
+
+3. Construct a table of the **number** (not proportion) of fish in each age and 10 mm TL category in the age-sample.  From these results, compute each of the following *by hand* (i.e., not using R).
+```{r}
+freq <- xtabs(~lcat10+age,rb.age.mod)
+```
+    a. How many Rock Bass in the age-sample are in the 180 mm TL category?
+```{r}
+sum(freq["180",])
+```
+    b. How many age-7 Rock Bass are in the age-sample?
+```{r}
+sum(freq[,"7"])
+```
+    c. What proportion of Rock Bass in the 210 mm TL category are age 5?
+```{r}
+freq["210","5"]/sum(freq["210",])
+```
+    d. What proportion of Rock Bass in the 180 mm TL category are age 5?
+```{r}
+freq["180","5"]/sum(freq["180",])
+```
+
+4. Construct an **observed** age-length key from the table above (using R).  From these results answer the following questions.
+```{r}
+ALK1 <- prop.table(freq,margin=1)
+```
+    a. What proportion of Rock Bass in the 210 mm TL category should be assigned age 5?
+```{r}
+ALK1["210","5"]
+```
+    b. How many of thirty Rock Bass in the 180 mm TL category should be assigned age 5?
+```{r}
+30*ALK1["180","5"]
+```
+    c. Construct a plot of the **observed** age-length key.  Are there any potential anomalies in the plot that would suggest that a smoothed age-length key should be used instead?
+    
+```{r}
+alkPlot(ALK1)
+```
+
+1. Construct a **smoothed** age-length key.  From these results answer the following questions.
+```{r}
+mlr <- multinom(age~lcat10,data=rb.age.mod,maxit=500)
+lens <- seq(110,270,10)
+ALK2 <- predict(mlr,data.frame(lcat10=lens),type="probs")
+row.names(ALK2) <- lens
+```
+    a. What proportion of Rock Bass in the 210 mm length category should be assigned age 5?
+```{r}
+ALK2["210","5"]
+```
+    b. How many of thirty Rock Bass in the 180 mm length category should be assigned age 5?
+```{r}
+30*ALK2["180","5"]
+```
+
+\vspace{24pt}
+5. **Make sure to save a cleaned (no code that is not needed or results in an error) script!**
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ALK1.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

@@ -1,0 +1,73 @@
+---
+title: "ALK Application - Exercise"
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead{}
+- \fancyfoot[RO,RE]{Ogle (Nunavut, 6-9 Aug 2016)}
+- \fancyfoot[LE,LO]{ALK Application Exercise}
+output: pdf_document
+geometry: left=0.5in, right=0.5in, top=0.5in, bottom=0.75in
+---
+
+```{r echo=FALSE, results='hide', message=FALSE}
+source("../knitr_setup.R")
+showkey <- FALSE
+opts_chunk$set(echo=showkey,
+               results=ifelse(showkey,"markup","hide"),
+               fig.show=ifelse(showkey,"asis","hide"))
+```
+```{r message=FALSE, warning=FALSE}
+source("ALK1.R")
+```
+
+Continue with the data.frames and age-length keys constructed in the previous exercise.  You may either extend your previous script or create a new script that `source()`s the previous script.
+
+1. Use the semi-random age assignment technique from Isermann and Knight (2005) and the **observed** age-length key to assign ages to the unaged fish in the length-sample.  Combine the age-sample and the age-assigned length-sample into a single data frame, add a variable to this data.frame that contains the 10 mm TL categories, and use the combined data frame to answer the following questions.
+```{r warning=FALSE}
+rb.len.mod <- alkIndivAge(ALK1,age~tl,data=rb.len)
+rb.comb <- rbind(rb.age,rb.len.mod)
+rb.comb <- mutate(rb.comb,lcat10=lencat(tl,w=10))
+agefreq <- xtabs(~age,data=rb.comb)
+lenfreq <- xtabs(~lcat10,data=rb.comb)
+lensum <- Summarize(tl~age,data=rb.comb)
+```
+    a. How many fish are estimated to be age 5?
+```{r}
+agefreq[["5"]]
+```
+    b. How many fish are estimated to be age 11?
+```{r}
+agefreq[["11"]]
+```
+    c. Plot the age distribution for all fish.
+```{r}
+hist(~age,data=rb.comb,w=1,xlab="Age")
+```
+    d. How many fish are in the 150 mm TL interval?
+```{r}
+lenfreq[["150"]]
+```
+    e. What is the mean TL of age-5 fish?
+```{r}
+lensum$mean[lensum$age=="5"]
+```
+    f. Plot the length-at-age with the mean length-at-age superimposed for all fish.
+```{r}
+plot(tl~age,data=rb.comb,ylab="Total Length (mm)",xlab="Age (yrs)",
+     pch=19,col=col2rgbt("black",1/20))
+lines(mean~fact2num(age),data=lensum,col="blue",lwd=2)
+```
+    g. Compare your results from questions a-f to someone else's results (or repeat those questions).  Did you both get the *exact* same results?  Why or why not?  If not, how different were they?
+\vspace{24pt}
+2. [**Time Permitting**] Repeat the previous question but using the **smoothed** age-length key.
+\vspace{24pt}
+3. [**Time Permitting**] Fit the typical VBGF to these results.
+\vspace{24pt}
+4. [**Time Permitting**] Compute the instantaneous mortality rate from these results.
+
+----
+
+```{r echo=FALSE, results="hide", message=FALSE}
+purl2("ALK2.Rmd",moreItems=c("knitr","showkey"),topnotes="Nunavut 6-9-Aug-16")
+```

@@ -40,7 +40,7 @@ confint(cc07)
 
 ----
 
-2. Repeat the above question but with the data from 2002.
+2. Repeat the above question but with the data from 2010.
 
 ```{r message=FALSE, warning=FALSE}
 dNU_FW10 <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),year==2010,!is.na(age)) %>%

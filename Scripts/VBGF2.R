@@ -1,6 +1,6 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), fact2num(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()
@@ -88,4 +88,4 @@ mnames <- c("{Omega}","{Linf}","{K}","{t0}","{Linf,K}","{Linf,t0}","{K,t0}","{Li
 aictab(ms,mnames)
 
 
-# Script created at 2016-07-24 20:32:13
+# Script created at 2016-07-24 20:41:20

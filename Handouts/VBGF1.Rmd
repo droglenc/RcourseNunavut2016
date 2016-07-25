@@ -23,7 +23,7 @@ set.seed(33839)   # for reproducibility only
 ## Load Necessary Packages
 \vspace{-12pt}
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart(), confint()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), fact2num(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate(), select()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()

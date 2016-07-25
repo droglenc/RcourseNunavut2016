@@ -28,7 +28,7 @@ plot(logfreq~age,data=d,xlab="Age",ylab="Log Frequency",pch=19)
 cc1 <- lm(logfreq~age,data=filterD(d,age>=5))
 anova(cc1)
 ( cf <- coef(cc1) )
-( Z <- -cf["age"] )
+( Z <- -cf[["age"]] )
 ( A <- 1-exp(-Z) )
 plot(logfreq~age,data=d,xlab="Age",ylab="Log Frequency",pch=19)
 abline(cc1)
@@ -67,4 +67,4 @@ abline(ccN$lm,col=clr1[2],lwd=2)
 legend("bottomleft",levels(d3$waterbody),col=clr1,pch=19,lwd=1,bty="n",cex=0.7)
 
 
-# Script created at 2016-07-20 13:33:21
+# Script created at 2016-07-24 20:45:19

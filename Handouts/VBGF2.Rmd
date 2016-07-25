@@ -20,7 +20,7 @@ set.seed(33839)   # for reproducibility only
 # Preliminaries
 ## Load Necessary Packages
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), fact2num(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()

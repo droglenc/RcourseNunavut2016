@@ -1,6 +1,6 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart(), confint()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), fact2num(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate(), select()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()
@@ -66,4 +66,4 @@ curve(gomp(x,coef(fit2)),from=0,to=10,n=500,lwd=2,col="red",add=TRUE)
 legend("bottomright",c("von Bertalanffy","Gompertz"),col=c("black","red"),lwd=2,bty="n",cex=0.8)
 
 
-# Script created at 2016-07-24 20:16:26
+# Script created at 2016-07-24 20:40:48

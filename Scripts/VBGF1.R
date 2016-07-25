@@ -1,6 +1,6 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate(), select()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()
@@ -15,11 +15,15 @@ ylbl <- "Total Length (in)"
 clr1 <- "black"
 clr2 <- col2rgbt(clr1,1/5)
 
+( sum <- Summarize(len~age,data=wae,digits=1) )
 plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
-Summarize(len~age,data=wae,digits=1)
+lines(mean~fact2num(age),data=sum,lwd=2,col="red")
 
 vb <- vbFuns("Typical",msg=TRUE)
 vb
+# demo calculations only
+vb(8,Linf=100,K=0.3,t0=-1)
+vb(1:10,c(100,0.3,-1))
 
 # Demos manual generation with plot ... LEFT plot
 svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE,fixed=list(Linf=525,K=0.3,t0=0))
@@ -47,6 +51,7 @@ plot(len~age,data=wae,xlab=xlbl,ylab=ylbl,pch=19,col=clr2)
 curve(vb(x,cf),from=2,to=9,n=500,lwd=2,col=clr1,add=TRUE)
 
 gomp <- GompertzFuns(msg=TRUE)
+
 plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
 curve(gomp(x,Linf=520,gi=0.3,ti=3),from=2,to=9,n=500,lwd=2,add=TRUE,col="red")
 curve(gomp(x,Linf=520,gi=0.6,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col="blue")
@@ -61,4 +66,4 @@ curve(gomp(x,coef(fit2)),from=0,to=10,n=500,lwd=2,col="red",add=TRUE)
 legend("bottomright",c("von Bertalanffy","Gompertz"),col=c("black","red"),lwd=2,bty="n",cex=0.8)
 
 
-# Script created at 2016-07-19 09:58:47
+# Script created at 2016-07-24 20:16:26

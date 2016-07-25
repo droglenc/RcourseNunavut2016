@@ -17,22 +17,28 @@ set.seed(33839)   # for reproducibility only
 
 ----
 
+\vspace{-24pt}
 # Preliminaries
+\vspace{-12pt}
 ## Load Necessary Packages
+\vspace{-12pt}
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart(), confint()
 library(dplyr)      # for mutate(), select()
 library(nlstools)   # for nlsBoot()
 library(AICcmodavg) # for aictab()
 ```
 
+\vspace{-18pt}
 ## Load Data and Make Some Preparations
+\vspace{-12pt}
 ```{r}
 # Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
 dSC <- read.csv("SawyerCo_reduced.csv")
 wae <- filterD(dSC,waterbody=="NELSON LAKE",species=="Walleye",!is.na(len),!is.na(age))
 ```
+\vspace{-9pt}
 ```{r}
 xlbl <- "Age (yrs)"
 ylbl <- "Total Length (in)"
@@ -40,27 +46,26 @@ clr1 <- "black"
 clr2 <- col2rgbt(clr1,1/5)
 ```
 
+\vspace{-18pt}
 ## Quick Summaries
+\vspace{-12pt}
 ```{r}
+( sum <- Summarize(len~age,data=wae,digits=1) )
 plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
-Summarize(len~age,data=wae,digits=1)
+lines(mean~fact2num(age),data=sum,lwd=2,col="red")
 ```
 
-----
-
-\vspace{-24pt}
 # Fit Typical VBGF
-\vspace{-12pt}
 ## Declare a Function
-\vspace{-12pt}
 ```{r}
 vb <- vbFuns("Typical",msg=TRUE)
 vb
+# demo calculations only
+vb(8,Linf=100,K=0.3,t0=-1)
+vb(1:10,c(100,0.3,-1))
 ```
 
-\vspace{-16pt}
 ## Find Starting Values
-\vspace{-12pt}
 ```{r fig.show='hold', out.height='2.5in'}
 # Demos manual generation with plot ... LEFT plot
 svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE,fixed=list(Linf=525,K=0.3,t0=0))
@@ -68,7 +73,7 @@ svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE,fixed=list(Linf=525,K=
 svb <- vbStarts(len~age,data=wae,type="Typical",plot=TRUE)
 ```
 
-## Fit the Model
+## Assumption Checking
 \vspace{-12pt}
 ```{r message=FALSE, warning=FALSE, fig.width=6}
 fit1 <- nls(len~vb(age,Linf,K,t0),data=wae,start=svb)
@@ -106,14 +111,22 @@ curve(vb(x,cf),from=2,to=9,n=500,lwd=2,col=clr1,add=TRUE)
 
 ----
 
+\newpage
 # Fit Gompertz Growth Function
-```{r par1=TRUE, fig.show='hold'}
+## Declare a Function
+```{r}
 gomp <- GompertzFuns(msg=TRUE)
+```
+
+## Find Starting Values
+```{r par1=TRUE, fig.show='hold'}
 plot(len~age,data=wae,pch=19,col=clr2,xlab=xlbl,ylab=ylbl)
 curve(gomp(x,Linf=520,gi=0.3,ti=3),from=2,to=9,n=500,lwd=2,add=TRUE,col="red")
 curve(gomp(x,Linf=520,gi=0.6,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col="blue")
 curve(gomp(x,Linf=520,gi=0.7,ti=2),from=2,to=9,n=500,lwd=2,add=TRUE,col=clr1)
 ```
+
+## Compare with VBGF
 ```{r}
 fit2 <- nls(len~gomp(age,Linf,gi,ti),data=wae,start=list(Linf=520,gi=0.7,ti=2))
 aictab(list(fit1,fit2),modnames=c("von Bertalanffy","Gompertz"))

@@ -1,8 +1,9 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)      # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
-library(dplyr)    # for mutate(), select()
-library(nlstools) # for nlsBoot()
+library(FSA)        # for filterD(), headtail(), col2rgbt(), vbFuns(), vbStart()
+library(dplyr)      # for mutate()
+library(nlstools)   # for nlsBoot()
+library(AICcmodavg) # for aictab()
 
 # Set your working directory to where your external data files (and scripts) are located.
 setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
@@ -15,8 +16,11 @@ ylbl <- "Total Length (in)"
 clr1 <- c("black","blue")
 clr2 <- col2rgbt(clr1,1/5)
 
+( sum <- Summarize(len~age+waterbody,data=wae,digits=1) )
+
 plot(len~age,data=wae,pch=19,col=clr2[waterbody],xlab=xlbl,ylab=ylbl)
-Summarize(len~age+waterbody,data=wae,digits=1)
+lines(mean~fact2num(age),data=filterD(sum,waterbody=="LAKE CHIPPEWA"),col=clr1[1],lwd=2)
+lines(mean~fact2num(age),data=filterD(sum,waterbody=="SAND LAKE"),col=clr1[2],lwd=2)
 
 ( svOm <- vbStarts(len~age,data=wae,plot=TRUE) )
 ( svLKt <- Map(rep,svOm,c(2,2,2)) )
@@ -50,6 +54,7 @@ vbK <- len~Linf*(1-exp(-K[waterbody]*(age-t0)))
 svK <- Map(rep,svOm,c(1,2,1))
 fitK <- nls(vbK,data=wae,start=svK)
 fitK <- nls(vbK,data=wae,start=svK,control=list(minFactor=1e-15,maxiter=500))
+
 extraSS(fitL,fitK,com=fitLK,com.name="{Linf,K}",sim.names=c("{Linf}","{K}"))
 
 summary(fitK,correlation=TRUE)
@@ -78,10 +83,9 @@ vbt <- len~Linf*(1-exp(-K*(age-t0[waterbody])))
 svt <- Map(rep,svOm,c(1,1,2))
 fitt <- nls(vbt,data=wae,start=svt)
 
-library(AICcmodavg)
 ms <- list(fitOm,fitL,fitK,fitt,fitLK,fitLt,fitKt,fitLKt)
 mnames <- c("{Omega}","{Linf}","{K}","{t0}","{Linf,K}","{Linf,t0}","{K,t0}","{Linf,K,t0}")
 aictab(ms,mnames)
 
 
-# Script created at 2016-07-18 17:20:10
+# Script created at 2016-07-24 20:32:13

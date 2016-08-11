@@ -57,4 +57,4 @@ round(cumsum(tp_age),1)["15"]
 plot(fl~age,data=dNU_10,pch=19,col=col2rgbt("black",1/10))
 
 
-# Script created at 2016-07-23 21:53:47
+# Script created at 2016-08-08 14:14:37

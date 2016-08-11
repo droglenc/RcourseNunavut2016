@@ -24,4 +24,4 @@ dNU$fl[5]
 dNU$fl[dNU$year==2002]
 
 
-# Script created at 2016-07-23 21:07:09
+# Script created at 2016-08-08 14:15:50

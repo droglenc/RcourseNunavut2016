@@ -39,7 +39,7 @@ plot(wt~fl,data=dNU_FW10,pch=19,col=clr2[sex],xlab="Fork Length (mm)",ylab="Weig
 plot(logwt~logfl,data=dNU_FW10,pch=19,col=clr2[sex],xlab="log Fork Length (mm)",ylab="log Weight (g)")
 ```
 
-    a. Fit an appropriate model for testing whether the weight-length relationship differs between female and male Arctic Charr.  Assess the assumptions of this model.
+    a. Fit an appropriate model for testing whether the weight-length relationship differs between female and male Arctic Char.  Assess the assumptions of this model.
 ```{r fig.width=6}
 dvr1 <- lm(logwt~logfl*sex,data=dNU_FW10)
 residPlot(dvr1,legend=FALSE)
@@ -70,7 +70,7 @@ cbind(tmp,exp(predW))
     e. Provide summary graphics of the weight-length relationship regression, separated by sex if appropriate, on two scales (i.e., two graphics).
 
 
-2. [*Time Permitting*] Perform a similar analysis to above but for testing whether the weight-length relationship differs between 2013 and 2014 for all Arctic Charr captured in **freshwater**.
+2. [*Time Permitting*] Perform a similar analysis to above but for testing whether the weight-length relationship differs between 2013 and 2014 for all Arctic Char captured in **freshwater**.
 
 ```{r}
 dNU_FW1314 <- filterD(dNU_FW,year>=2013)

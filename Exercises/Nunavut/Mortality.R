@@ -38,4 +38,4 @@ anova(lm1)
 fitPlot(lm1)
 
 
-# Script created at 2016-07-24 20:47:13
+# Script created at 2016-08-08 14:15:06

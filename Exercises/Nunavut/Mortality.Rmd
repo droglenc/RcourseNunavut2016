@@ -23,7 +23,7 @@ library(readxl)
 
 ----
 
-1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data.frame to Arctic Charr captured in *freshwaters* in *2007*.  Attempt to estimate the annual mortality rate from these data.
+1. Load the `PG008_original.xlsx` file into a data.frame object and restrict the data.frame to Arctic Char captured in *freshwaters* in *2007*.  Attempt to estimate the annual mortality rate from these data.
 ```{r message=FALSE, warning=FALSE}
 source("PG008_readdata.R")
 dNU_FW07 <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),year==2007,!is.na(age)) %>%
@@ -57,7 +57,7 @@ confint(cc10)
 
 ----
 
-3. Statistically determine if there is a significant difference in the instantaneous mortality rate between Charr captured in 2007 and 2010.
+3. Statistically determine if there is a significant difference in the instantaneous mortality rate between Char captured in 2007 and 2010.
 ```{r}
 dNU_FW07 <- mutate(dNU_FW07,year=2007)
 dNU_FW10 <- mutate(dNU_FW10,year=2010)

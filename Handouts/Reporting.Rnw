@@ -1,0 +1,60 @@
+\documentclass{article}
+
+\input{c:/aaaWork/zGnrlLatex/GnrlPreamble}
+\hypersetup{pdftitle = RFish Midwest 2012 Notes}
+\input{c:/aaaWork/zGnrlLatex/JustRPreamble}
+
+\begin{document}
+  \title{Tobin Harbor Brook Trout Report}
+  \author{\vspace{-12pt}Derek H. Ogle}
+  \date{\vspace{-12pt}\today}
+  \maketitle
+
+<<setup, echo=FALSE,include=FALSE>>=
+# THIS SECTION CAN BE GENERALLY BE IGNORED IF VIEWED AS AN R SCRIPT ############
+# knitr custom hooks - set default plot options
+knit_hooks$set(par1 = function(before, options, envir) {
+    if (before) par(mar=c(3.5,3.5,1,1),mgp=c(2.1,0.4,0),tcl=-0.2)
+})
+# knitr options -- figure handling
+opts_chunk$set(fig.path='Figs/', fig.width=3.5, fig.height=3.5, out.width='.4\\linewidth', fig.align='center')
+# knitr options -- output look
+opts_chunk$set(prompt=TRUE,comment='', tidy=FALSE, highlight=TRUE)
+# r options -- Ogle preferences
+options(width=90, show.signif.stars=FALSE, continue=" ", contrasts=c("contr.sum","contr.poly"), useFancyQuotes=FALSE)
+# A list of required packages -- for reproducibilities purpose
+rqrd <- c("FSA")
+# END OF SECTION TO BE IGNORED #################################################
+library(FSA)      # catchCurve
+@
+
+\section*{Introduction}
+Brook trout are important.  Isle Royale is a fun place to sample fish.
+
+\section*{Methods}
+We electrofished.  Caught and aged fish.  Used a catch curve analysis to estimate the instantaneous mortality rate.
+
+\section*{Results}
+<<echo=FALSE, results='hide'>>=
+df <- data.frame(age=0:5,catch=c(47,182,126,104,81,64))
+df$logct <- log(df$catch)
+
+ttl.catch <- sum(df$catch)
+max.catch <- max(df$catch)
+age.at.max.catch <- df$age[which(df$catch==max.catch)]
+
+cc1 <- catchCurve(catch~age,data=df,ages=age.at.max.catch:5)
+sum1 <- summary(cc1)
+ci1 <- confint(cc1)
+@
+
+A total of \Sexpr{ttl.catch} brook trout were captured.  The maximum catch of \Sexpr{max.catch} occurred at age-\Sexpr{age.at.max.catch}.  The instantaneous mortality computed for ages \Sexpr{age.at.max.catch} to \Sexpr{max(df$age)} was \Sexpr{round(sum1["Z","Estimate"],3)} with a 95\% confidence interval from \Sexpr{round(ci1["Z",1],3)} to \Sexpr{round(ci1["Z",2],3)} \figrefp{fig:CatchCurve}.
+
+<<CatchCurve, par1=TRUE, echo=FALSE, fig.cap="Log catch versus age for Tobin Harbor Brook Trout, with the ages used for estimating Z shown.", fig.pos='h'>>=
+plot(cc1)
+@
+
+\section*{Discussion}
+We did great work.
+
+\end{document}

@@ -37,7 +37,7 @@ headtail(dNU)
 dNU <- mutate(dNU,fl.in=fl/25.4,w.lbs=wt/454)
 headtail(dNU)
 ```
-3. Add a new variable that records the sex of the fish as `male`, `female`, and `unknown` (rather than `M`, `F`, and `U`.
+3. Add a new variable that records the sex of the fish as `male`, `female`, and `unknown` (rather than `M`, `F`, and `U`).
 ```{r}
 dNU <- mutate(dNU,sex2=mapvalues(sex,from=c("M","F","U"),to=c("male","female","unknown")))
 headtail(dNU)

@@ -76,7 +76,7 @@ lines(L,W[,"upr"],lwd=2,lty=2)
 
 ----
 
-2. [*Time Permitting*] Repeat the above analyses for some other subset of Arctic Charr.
+2. [*Time Permitting*] Repeat the above analyses for some other subset of Arctic Char.
 
 ----
 

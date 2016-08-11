@@ -74,4 +74,4 @@ cggf
 aictab(list(fit1,fitlgf,fitggf),modnames=c("von Bertalanffy","logistic","Gompertz"))
 
 
-# Script created at 2016-07-24 19:49:46
+# Script created at 2016-08-08 14:14:28

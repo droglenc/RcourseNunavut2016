@@ -1,16 +1,16 @@
 # Nunavut 6-9-Aug-16
 
-library(FSA)    # for headtail(), filterD()
+library(FSA)    # for headtail(), filterD(),lencat(), mapvalues()
 library(dplyr)  # for select(), mutate(), filter()
 
 # Set your working directory to where your external data files (and scripts) are located.
-setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Scripts")
 dSC <- read.csv("SawyerCo_reduced.csv")
 str(dSC)
 headtail(dSC,n=6)
 
 dSC <- select(dSC,-age_strux,-lennote)
-headtail(dSC)
+str(dSC)
 
 dSC <- mutate(dSC,len.in=len/25.4)
 headtail(dSC)
@@ -39,7 +39,7 @@ dSC_rivers_trout <- filterD(dSC_rivers,species %in% c("Brook Trout","Brown Trot"
 levels(dSC_rivers_trout$species)
 dSC_rivers_trout <- filterD(dSC_rivers,species %in% c("Brook Trout","Brown Trout"))
 levels(dSC_rivers_trout$species)
-tmp <- filterD(dSC_rivers_trout,len>=100 & len<200)
+tmp <- filterD(dSC_rivers_trout,len>=100,len<200)
 headtail(tmp)
 tmp <- filterD(dSC_rivers_trout,len<100 | len>200)
 headtail(tmp)

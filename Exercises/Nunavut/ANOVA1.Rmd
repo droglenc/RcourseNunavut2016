@@ -49,7 +49,7 @@ with(sum,plotCI(year,mean,li=LCI,ui=UCI,pch=19,xlim=c(2005.8,2012.2),ylim=c(590,
 with(sum,text(year,UCI,c("a","b","b","b","b"),pos=3))
 ```
 
-2. [*Time permitting*]  Determine if the mean fork length of **Age-15 to 20** (inclusive) Arctic Charr captured in **"freshwater"** differs among years.
+2. [*Time permitting*]  Determine if the mean fork length of **Age-15 to 20** (inclusive) Arctic Char captured in **"freshwater"** differs among years.
 ```{r message=FALSE, warning=FALSE}
 dNU_FW <- filterD(dNU,water.type %in% c("Freshwater","freshwater"),age>=15,age<=20)
 ```

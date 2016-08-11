@@ -19,7 +19,7 @@ source("../knitr_setup.R")
 # Preliminaries
 ## Load Necessary Packages
 ```{r results='hide', warning=FALSE, message=FALSE}
-library(FSA)    # for headtail(), filterD()
+library(FSA)    # for headtail(), filterD(), lencat(), mapvalues(), 
 library(dplyr)  # for select(), mutate(), filter()
 ```
 

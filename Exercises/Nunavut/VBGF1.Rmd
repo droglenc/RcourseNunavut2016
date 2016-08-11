@@ -72,7 +72,7 @@ boot1 <- nlsBoot(fit1,niter=1000)
 confint(boot1)
 ```
 
-    f. Predict the mean length, with 95% confidence interval, for an age-18 Charr.  Comment on the width of this confidence interval? 
+    f. Predict the mean length, with 95% confidence interval, for an age-18 Char.  Comment on the width of this confidence interval? 
 ```{r}
 ageX <- 18
 predict(fit1,data.frame(age=ageX))

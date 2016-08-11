@@ -36,4 +36,4 @@ headtail(tmp)
 ( tmp <- filterD(dNU,sex2=="male",!is.na(age)) )
 
 
-# Script created at 2016-07-23 21:06:49
+# Script created at 2016-08-08 14:15:39

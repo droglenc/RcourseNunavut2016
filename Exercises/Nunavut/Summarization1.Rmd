@@ -48,7 +48,7 @@ round(prop.table(n_sexyr,margin=2)*100,1)
 ( n_matsexyr <- xtabs(~mat+year+sex,data=dNU) )
 ```
 
-2. Isolate the Arctic Charr captured in 2013.  Use these data to answer the questions below.
+2. Isolate the Arctic Char captured in 2013.  Use these data to answer the questions below.
 ```{r}
 dNU_13 <- filterD(dNU,year==2013)
 ```
@@ -88,7 +88,7 @@ plot(logwt~logfl,data=dNU_13,pch=19,col=col2rgbt("black",1/10))
 with(dNU_13,cor(logwt,logfl))
 ```
 
-3. Isolate Arctic Charr captured from a single year where age was estimated for a large number of fish.  [*Hint: Make a frequency table of `age` by `year`.*]  Use these data to answer the questions below.
+3. [*Time Permitting*] Isolate Arctic Char captured from a single year where age was estimated for a large number of fish.  [*Hint: Make a frequency table of `age` by `year`.*]  Use these data to answer the questions below.
 ```{r}
 xtabs(~age+fyear,data=dNU)
 dNU_10 <- filterD(dNU,year==2010)

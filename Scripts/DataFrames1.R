@@ -5,12 +5,14 @@ library(readxl) # for read_excel()
 library(dplyr)  # for mutate()
 
 # Set your working directory to where your external data files (and scripts) are located.
-setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+#setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Handouts")
+setwd("C:/aaaWork/Web/GitHub/RcourseNunavut2016/Scripts")
 
 dSC <- read.csv("SawyerCo_reduced.csv")
 str(dSC)
 headtail(dSC)
 dSC$len
+mean(dSC$len)
 dSC$len[1]
 dSC$len[c(1,3,5)]
 

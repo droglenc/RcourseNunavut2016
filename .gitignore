@@ -5,6 +5,18 @@
 # administrative files
 Admin/
 
+# Full Zip file (after the workshop)
+RCourseNunavut2016.zip
+
+# Nunavut and Sawyer Co. Data data files
+Exercises/Nunavut/*.xlsx
+Exercises/Nunavut/*.csv
+Scripts/*.xlsx
+Scripts/*.csv
+Handouts/*.xlsx
+Handouts/*.csv
+Handouts/zzzOrigData/
+
 # Intermediate files
 CoursePrep/*.log
 CoursePrep/*.synctex.gz
